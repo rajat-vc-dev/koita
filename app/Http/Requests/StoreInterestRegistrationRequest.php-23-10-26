@@ -1,0 +1,144 @@
+<?php
+
+namespace App\Http\Requests;
+
+use App\Models\Applicant;
+use App\Rules\BusinessEmail;
+use App\Rules\RecaptchaV2;
+use App\Support\Honeypot;
+use Illuminate\Contracts\Validation\Validator;
+use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
+
+class StoreInterestRegistrationRequest extends FormRequest
+{
+    public function authorize(): bool
+    {
+        return true;
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    public function rules(): array
+    {
+        $file = ['nullable', 'file', 'mimes:'.Applicant::DOCUMENT_MIMES, 'max:'.Applicant::DOCUMENT_MAX_KB];
+
+        $fieldMax = Applicant::FIELD_MAX;
+        $mobileMax = Applicant::MOBILE_MAX;
+
+        return [
+            'organisation_name' => ['required', 'string', 'max:'.$fieldMax],
+            'website' => ['required', 'string', 'max:'.$fieldMax, 'url'],
+            'contact_person_name' => ['required', 'string', 'max:'.$fieldMax],
+            'designation' => ['required', 'string', 'max:'.$fieldMax],
+            'email' => [
+                'required',
+                'email',
+                'max:'.$fieldMax,
+                Rule::unique('applicants', 'email'),
+                new BusinessEmail,
+            ],
+            'mobile' => ['required', 'string', 'max:'.$mobileMax, 'regex:/^[ ()\-_+\d]+$/'],
+            'organisation_type' => ['required', Rule::in(array_keys(Applicant::organisationTypes()))],
+            'agree_terms' => ['accepted'],
+            'g-recaptcha-response' => ['nullable', 'string', new RecaptchaV2],
+            'section_8_certificate' => $file,
+            'certificate_12a' => $file,
+            'certificate_80g' => $file,
+            'coi' => $file,
+            'pan' => $file,
+            'gst' => $file,
+            ...Honeypot::rules(),
+        ];
+    }
+
+    protected function prepareForValidation(): void
+    {
+        $website = trim((string) $this->input('website'));
+        if ($website !== '' && ! preg_match('#^https?://#i', $website)) {
+            $this->merge(['website' => 'https://'.$website]);
+        }
+
+        if ($this->filled('email')) {
+            $this->merge(['email' => strtolower(trim((string) $this->input('email')))]);
+        }
+    }
+
+    /**
+     * @return array<string, string>
+     */
+    public function messages(): array
+    {
+        $fieldMax = Applicant::FIELD_MAX;
+        $mobileMax = Applicant::MOBILE_MAX;
+
+        return [
+            'email.unique' => 'This email is already registered. Please use a different email address.',
+            'agree_terms.accepted' => 'Please agree to the terms and conditions to continue.',
+            'organisation_name.max' => "Organisation name may not be greater than {$fieldMax} characters.",
+            'website.max' => "Website / public profile link may not be greater than {$fieldMax} characters.",
+            'contact_person_name.max' => "Contact person name may not be greater than {$fieldMax} characters.",
+            'designation.max' => "Designation may not be greater than {$fieldMax} characters.",
+            'email.max' => "Email may not be greater than {$fieldMax} characters.",
+            'mobile.max' => "Mobile number may not be greater than {$mobileMax} characters.",
+            ...Honeypot::messages(),
+        ];
+    }
+
+    protected function getRedirectUrl(): string
+    {
+        return route('home').'#register';
+    }
+
+    public function withValidator(Validator $validator): void
+    {
+        $validator->after(function (Validator $validator): void {
+            $digits = preg_replace('/\D+/', '', (string) $this->input('mobile')) ?? '';
+
+            if (strlen($digits) >= 12 && str_starts_with($digits, '91')) {
+                $digits = substr($digits, 2);
+            }
+            if (strlen($digits) >= 11 && str_starts_with($digits, '0')) {
+                $digits = substr($digits, 1);
+            }
+
+            if (strlen($digits) < 10 || ! preg_match('/^[6-9]/', $digits)) {
+                $validator->errors()->add(
+                    'mobile',
+                    'Please enter a valid 10-digit mobile number starting with 6, 7, 8 or 9.',
+                );
+            }
+
+            $type = (string) $this->input('organisation_type');
+            $required = Applicant::requiredDocumentFieldsForType($type);
+            $labels = Applicant::documentFieldLabels();
+
+            foreach ($required as $input) {
+                if (! $this->hasFile($input)) {
+                    $validator->errors()->add(
+                        $input,
+                        'Please upload '.($labels[$input] ?? str_replace('_', ' ', $input)).'.',
+                    );
+                }
+            }
+
+            if ($type === Applicant::TYPE_TRUST) {
+                $hasEitherOr = false;
+                foreach (Applicant::trustEitherOrDocumentFields() as $input) {
+                    if ($this->hasFile($input)) {
+                        $hasEitherOr = true;
+                        break;
+                    }
+                }
+
+                if (! $hasEitherOr) {
+                    $message = Applicant::trustEitherOrDocumentMessage();
+                    foreach (Applicant::trustEitherOrDocumentFields() as $input) {
+                        $validator->errors()->add($input, $message);
+                    }
+                }
+            }
+        });
+    }
+}

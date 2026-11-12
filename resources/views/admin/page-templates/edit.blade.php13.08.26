@@ -1,0 +1,47 @@
+@extends('admin.layouts.app')
+
+@section('title', 'Edit Thank You Page')
+@section('page_title', 'Edit Thank You Page')
+@section('breadcrumb', $template->name)
+
+@section('content')
+<div class="row">
+    <div class="col-lg-10 mt-3">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="header-title">{{ $template->name }}</h4>
+                <p class="text-muted mb-3">
+                    Key: <code>{{ $template->key }}</code><br>
+                    Available placeholders:
+                    <code>{{ $template->placeholders }}</code><br>
+                    HTML is rendered as-is inside the site layout (nav/footer stay). Use classes like <code>pagehero thank-sec</code> and <code>wrap</code> to match the site.
+                </p>
+
+                <form method="POST" action="{{ route('admin.page-templates.update', $template) }}">
+                    @csrf
+                    @method('PUT')
+
+                    <div class="form-group">
+                        <label for="page_title">Browser page title</label>
+                        <input type="text" class="form-control @error('page_title') is-invalid @enderror" id="page_title" name="page_title" value="{{ old('page_title', $template->page_title) }}" required>
+                        @error('page_title')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+
+                    <div class="form-group">
+                        <label for="html">HTML content</label>
+                        <textarea class="form-control @error('html') is-invalid @enderror" id="html" name="html" rows="18" required>{{ old('html', $template->html) }}</textarea>
+                        @error('html')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">Save template</button>
+                    <a href="{{ route('admin.page-templates.index') }}" class="btn btn-light">Cancel</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+@endsection

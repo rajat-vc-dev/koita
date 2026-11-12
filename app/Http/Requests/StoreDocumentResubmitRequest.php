@@ -1,0 +1,125 @@
+<?php
+
+namespace App\Http\Requests;
+
+use App\Models\Applicant;
+use App\Rules\RecaptchaV2;
+use App\Support\Honeypot;
+use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Validator;
+
+class StoreDocumentResubmitRequest extends FormRequest
+{
+    public function authorize(): bool
+    {
+        return true;
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    public function rules(): array
+    {
+        $file = ['nullable', 'file', 'mimes:'.Applicant::DOCUMENT_MIMES, 'max:'.Applicant::DOCUMENT_MAX_KB];
+        $fieldMax = Applicant::FIELD_MAX;
+        $mobileMax = Applicant::MOBILE_MAX;
+
+        return [
+            'website' => ['required', 'string', 'max:'.$fieldMax, 'url'],
+            'contact_person_name' => ['required', 'string', 'max:'.$fieldMax],
+            'designation' => ['required', 'string', 'max:'.$fieldMax],
+            'mobile' => ['required', 'string', 'max:'.$mobileMax, 'regex:/^[ ()\-_+\d]+$/'],
+            'g-recaptcha-response' => ['nullable', 'string', new RecaptchaV2],
+            'section_8_certificate' => $file,
+            'certificate_12a' => $file,
+            'certificate_80g' => $file,
+            'coi' => $file,
+            'pan' => $file,
+            'gst' => $file,
+            ...Honeypot::rules(),
+        ];
+    }
+
+    protected function prepareForValidation(): void
+    {
+        $website = trim((string) $this->input('website'));
+        if ($website !== '' && ! preg_match('#^https?://#i', $website)) {
+            $this->merge(['website' => 'https://'.$website]);
+        }
+    }
+
+    /**
+     * @return array<string, string>
+     */
+    public function messages(): array
+    {
+        $fieldMax = Applicant::FIELD_MAX;
+        $mobileMax = Applicant::MOBILE_MAX;
+
+        return [
+            'website.max' => "Website / public profile link may not be greater than {$fieldMax} characters.",
+            'contact_person_name.max' => "Contact person name may not be greater than {$fieldMax} characters.",
+            'designation.max' => "Designation may not be greater than {$fieldMax} characters.",
+            'mobile.max' => "Mobile number may not be greater than {$mobileMax} characters.",
+            ...Honeypot::messages(),
+        ];
+    }
+
+    public function withValidator(Validator $validator): void
+    {
+        $validator->after(function (Validator $validator): void {
+            $digits = preg_replace('/\D+/', '', (string) $this->input('mobile')) ?? '';
+
+            if (strlen($digits) >= 12 && str_starts_with($digits, '91')) {
+                $digits = substr($digits, 2);
+            }
+            if (strlen($digits) >= 11 && str_starts_with($digits, '0')) {
+                $digits = substr($digits, 1);
+            }
+
+            if (strlen($digits) < 10 || ! preg_match('/^[6-9]/', $digits)) {
+                $validator->errors()->add(
+                    'mobile',
+                    'Please enter a valid 10-digit mobile number starting with 6, 7, 8 or 9.',
+                );
+            }
+
+            $applicant = $this->resolvedApplicant();
+            $required = $applicant?->requestedResubmitFields() ?? [];
+            $type = $applicant?->organisation_type;
+            $docMap = Applicant::documentsByType()[$type] ?? [];
+
+            if ($required === []) {
+                $validator->errors()->add('documents', 'No documents were requested for this link.');
+
+                return;
+            }
+
+            foreach ($required as $input) {
+                if (! isset($docMap[$input])) {
+                    continue;
+                }
+
+                if (! $this->hasFile($input)) {
+                    $validator->errors()->add(
+                        $input,
+                        'Please upload '.Applicant::resubmitDocumentLabel($type, $input).'.',
+                    );
+                }
+            }
+        });
+    }
+
+    private function resolvedApplicant(): ?Applicant
+    {
+        $token = (string) $this->route('token');
+
+        return Applicant::query()
+            ->where('document_resubmit_token', $token)
+            ->where('is_registered', true)
+            ->where('application_status', '!=', Applicant::STATUS_REJECTED)
+            ->whereNotNull('document_resubmit_expires_at')
+            ->where('document_resubmit_expires_at', '>', now())
+            ->first();
+    }
+}

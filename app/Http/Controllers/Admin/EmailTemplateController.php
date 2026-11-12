@@ -1,0 +1,40 @@
+<?php
+
+namespace App\Http\Controllers\Admin;
+
+use App\Http\Controllers\Controller;
+use App\Models\EmailTemplate;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
+use Illuminate\View\View;
+
+class EmailTemplateController extends Controller
+{
+    public function index(): View
+    {
+        $templates = EmailTemplate::query()->orderBy('name')->get();
+
+        return view('admin.email-templates.index', compact('templates'));
+    }
+
+    public function edit(EmailTemplate $emailTemplate): View
+    {
+        return view('admin.email-templates.edit', [
+            'template' => $emailTemplate,
+        ]);
+    }
+
+    public function update(Request $request, EmailTemplate $emailTemplate): RedirectResponse
+    {
+        $data = $request->validate([
+            'subject' => ['required', 'string', 'max:255'],
+            'body' => ['required', 'string'],
+        ]);
+
+        $emailTemplate->update($data);
+
+        return redirect()
+            ->route('admin.email-templates.index')
+            ->with('status', 'Email template updated.');
+    }
+}

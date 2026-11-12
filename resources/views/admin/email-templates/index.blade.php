@@ -1,0 +1,49 @@
+@extends('admin.layouts.app')
+
+@section('title', 'Email Templates')
+@section('page_title', 'Email Templates')
+@section('breadcrumb', 'Manage')
+
+@section('content')
+<div class="row">
+    <div class="col-12 mt-3">
+        @if (session('status'))
+            <div class="alert alert-success">{{ session('status') }}</div>
+        @endif
+
+        <div class="card">
+            <div class="card-body">
+                <h4 class="header-title">Applicants registration emails</h4>
+                <!--<p class="text-muted">Edit the static subject and body used for applicants registration. Placeholders are replaced at send time.</p>-->
+
+                <div class="single-table">
+                    <div class="table-responsive">
+                        <table class="table table-hover text-center">
+                            <thead class="text-uppercase">
+                                <tr>
+                                    <th>Name</th>
+                                    <!--<th>Key</th>-->
+                                    <th>Subject</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($templates as $template)
+                                    <tr>
+                                        <td class="text-left">{{ $template->name }}</td>
+                                        <!--<td><code>{{ $template->key }}</code></td>-->
+                                        <td class="text-left">{{ $template->subject }}</td>
+                                        <td>
+                                            <a class="btn btn-xs btn-primary" href="{{ route('admin.email-templates.edit', $template) }}">Edit</a>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@endsection

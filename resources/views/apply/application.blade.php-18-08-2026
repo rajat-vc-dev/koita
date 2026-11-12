@@ -1,0 +1,338 @@
+@extends('layouts.site')
+
+@section('title', 'Application Form — AI for Impact Awards')
+@section('description', 'Complete your AI for Impact Awards application.')
+
+@section('nav')
+@include('partials.nav-simple')
+@endsection
+
+@push('styles')
+<link rel="stylesheet" href="{{ asset('css/styles.css') }}">
+@endpush
+
+@section('content')
+@php
+  $org = $applicant->organizationDetail;
+  $sol = $applicant->aiSolution;
+  $areas = old('primary_areas', $org->primary_areas ?? []);
+  $users = old('users_of_solution', $sol->users_of_solution ?? []);
+@endphp
+
+<section class="pagehero" id="formTop">
+  <div class="wrap">
+    <h1 style="margin-top:12px">Application Form</h1>
+    <p>Signed in as <strong>{{ $applicant->email }}</strong> ({{ $applicant->organisation_name }}).</p>
+    <form method="POST" action="{{ route('apply.logout') }}" style="margin-top:12px">
+      @csrf
+      <button type="submit" class="btn btn-outline btn-sm">Sign out</button>
+    </form>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap" style="max-width:860px">
+    <div id="appWrap" class="form-card">
+      <div class="stepper" id="stepper">
+        <div class="stp {{ $step === 0 ? 'active' : ($step > 0 ? 'done' : '') }}" data-s="0"><span class="dot">1</span> Organization Details</div><span class="bar"></span>
+        <div class="stp {{ $step === 1 ? 'active' : ($step > 1 ? 'done' : '') }}" data-s="1"><span class="dot">2</span> AI Solution Overview</div><span class="bar"></span>
+        <div class="stp {{ $step === 2 ? 'active' : '' }}" data-s="2"><span class="dot">3</span> Impact, Measurement & Adoption</div>
+      </div>
+
+      <div class="form-body">
+        <div id="err" style="color:#c0392b;font-weight:700;margin-bottom:14px;min-height:1.2em;">
+          @if ($errors->any()) {{ $errors->first() }} @endif
+        </div>
+
+        {{-- STEP 1 --}}
+        <form id="step1Form" class="fstep {{ $step === 0 ? 'active' : '' }}" method="POST" action="{{ route('apply.application.step1') }}" style="{{ $step === 0 ? '' : 'display:none' }}" novalidate>
+          @csrf
+          <div class="field" style="opacity:1">
+            <label>Organization Name</label>
+            <input type="text" value="{{ $applicant->organisation_name }}" readonly disabled style="background:#f3eee6;color:#6d5a64;cursor:not-allowed">
+          </div>
+          <div class="field work">
+            <label>Organisation's Primary Area of Work <span class="req">*</span></label>
+            <span class="hint">Check all that apply</span>
+            <div class="checks" id="primaryAreasGroup">
+              @foreach (['Education','Livelihood','Healthcare','Environment','Climate','Other'] as $area)
+                <label class="check"><input type="checkbox" name="primary_areas[]" value="{{ $area }}" class="primary-area" @checked(in_array($area, $areas, true))> {{ $area }}</label>
+              @endforeach
+            </div>
+            <div class="field" id="primaryAreaOtherWrap" style="display:none;margin-top:10px">
+              <label for="primary_area_other">Please specify other area <span class="req">*</span></label>
+              <input type="text" id="primary_area_other" name="primary_area_other" value="{{ old('primary_area_other', $org->primary_area_other ?? '') }}">
+            </div>
+          </div>
+          <div class="field">
+            <label for="mission_overview">Brief overview of your organization’s mission and work <span class="req">*</span></label>
+            <span class="hint">200 words max</span>
+            <textarea id="mission_overview" name="mission_overview" data-words="200">{{ old('mission_overview', $org->mission_overview ?? '') }}</textarea>
+          </div>
+          <div class="form-nav">
+            <span></span>
+            <button class="btn btn-primary" type="submit" id="step1Btn">Continue <span class="arw">&rarr;</span></button>
+          </div>
+        </form>
+
+        {{-- STEP 2 --}}
+        <form id="step2Form" class="fstep {{ $step === 1 ? 'active' : '' }}" method="POST" action="{{ route('apply.application.step2') }}" style="{{ $step === 1 ? '' : 'display:none' }}" novalidate>
+          @csrf
+          <div class="field">
+            <label for="solution_name">Solution Name <span class="req">*</span></label>
+            <input type="text" id="solution_name" name="solution_name" value="{{ old('solution_name', $sol->solution_name ?? '') }}">
+          </div>
+          <div class="field">
+            <label for="social_problem">What Social Problem Are You Solving Using AI? <span class="req">*</span></label>
+            <span class="hint">250 words max</span>
+            <textarea id="social_problem" name="social_problem" data-words="250">{{ old('social_problem', $sol->social_problem ?? '') }}</textarea>
+          </div>
+          <div class="field">
+            <label for="solution_description">Describe Your AI Solution <span class="req">*</span></label>
+            <span class="hint">250 words max</span>
+            <textarea id="solution_description" name="solution_description" data-words="250">{{ old('solution_description', $sol->solution_description ?? '') }}</textarea>
+          </div>
+          <div class="field">
+            <label>Users of Solution <span class="req">*</span></label>
+            <span class="hint">Check all that apply</span>
+            <div class="checks users" id="usersGroup">
+              @foreach (['Beneficiaries directly','Field workers/intermediaries','Government workers','Other'] as $user)
+                <label class="check"><input type="checkbox" name="users_of_solution[]" value="{{ $user }}" class="users-of" @checked(in_array($user, $users, true))> {{ $user }}</label>
+              @endforeach
+            </div>
+            <div class="field" id="usersOtherWrap" style="display:none;margin-top:10px">
+              <label for="users_other">Please specify other users <span class="req">*</span></label>
+              <input type="text" id="users_other" name="users_other" value="{{ old('users_other', $sol->users_other ?? '') }}">
+            </div>
+          </div>
+          <div class="field">
+            <label for="technical_details">Share The Technical Details of Your Solution <span class="req">*</span></label>
+            <span class="hint">200 words max</span>
+            <textarea id="technical_details" name="technical_details" data-words="200">{{ old('technical_details', $sol->technical_details ?? '') }}</textarea>
+          </div>
+          <div class="field">
+            <label for="demo_video_url">Upload a Video Demonstration of Your Solution With a Voice-Over Explanation <span class="req">*</span></label>
+            <span class="hint">Please upload the video to your Google Drive and share the open-access link here.</span>
+            <input type="url" id="demo_video_url" name="demo_video_url" value="{{ old('demo_video_url', $sol->demo_video_url ?? '') }}" placeholder="https://drive.google.com/...">
+          </div>
+          <div class="field">
+            <label for="testimonial_video_url">Upload a User Testimonial Video Where the User Shares Their Experience With Your Solution <span class="req">*</span></label>
+            <span class="hint">Please upload the video to your Google Drive and share the open-access link here.</span>
+            <input type="url" id="testimonial_video_url" name="testimonial_video_url" value="{{ old('testimonial_video_url', $sol->testimonial_video_url ?? '') }}" placeholder="https://drive.google.com/...">
+          </div>
+          <div class="form-nav">
+            <a class="btn btn-outline" href="{{ route('apply.application', ['step' => 0]) }}">&larr; Back</a>
+            <button class="btn btn-primary" type="submit" id="step2Btn">Continue <span class="arw">&rarr;</span></button>
+          </div>
+        </form>
+
+        {{-- STEP 3 --}}
+        <form id="step3Form" class="fstep {{ $step === 2 ? 'active' : '' }}" method="POST" action="{{ route('apply.application.step3') }}" enctype="multipart/form-data" style="{{ $step === 2 ? '' : 'display:none' }}" novalidate>
+          @csrf
+          <div class="field">
+            <label>Which Stage of Adoption Best Describes Your Solution? <span class="req">*</span></label>
+            <div class="checks" id="adoptGroup">
+              <label class="check"><input type="radio" name="adoption_stage" value="dev" @checked(old('adoption_stage', $applicant->impactDetail->adoption_stage ?? '') === 'dev')> Still Under Development / Testing</label>
+              <label class="check"><input type="radio" name="adoption_stage" value="pilot" @checked(old('adoption_stage', $applicant->impactDetail->adoption_stage ?? '') === 'pilot')> Piloted With Target Users</label>
+              <label class="check"><input type="radio" name="adoption_stage" value="scale" @checked(old('adoption_stage', $applicant->impactDetail->adoption_stage ?? '') === 'scale')> Currently Deployed at Scale</label>
+            </div>
+            <input type="number" id="user_count" name="user_count" placeholder="Number of users (for pilot / scale)" value="{{ old('user_count', $applicant->impactDetail->user_count ?? '') }}" style="margin-top:8px;display:none">
+          </div>
+          <div class="field">
+            <label for="success_measurement">How Do You Measure Success of The AI Intervention? <span class="req">*</span></label>
+            <span class="hint">250 words max</span>
+            <textarea id="success_measurement" name="success_measurement" data-words="250">{{ old('success_measurement', $applicant->impactDetail->success_measurement ?? '') }}</textarea>
+          </div>
+          <div class="field">
+            <label for="outcomes_impact">What Are The Outcomes or Impact Achieved so Far? <span class="req">*</span></label>
+            <span class="hint">250 words max</span>
+            <textarea id="outcomes_impact" name="outcomes_impact" data-words="250">{{ old('outcomes_impact', $applicant->impactDetail->outcomes_impact ?? '') }}</textarea>
+          </div>
+          <div class="field files">
+            <label for="deck">Upload a PPT Explaining Your Solution and Work <span class="req">*</span></label>
+            <span class="hint">Only PDF, PPT, or PPTX — max 20MB</span>
+            <label class="file-drop"><div class="fic"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg></div><span class="fl" id="deckLabel">Click to upload PPT / PDF</span><input type="file" id="deck" name="deck" accept=".pdf,.ppt,.pptx,application/pdf,application/vnd.ms-powerpoint,application/vnd.openxmlformats-officedocument.presentationml.presentation" hidden></label>
+          </div>
+          <div class="field">
+            <label for="brand_asset_url">Upload brand asset <span class="req">*</span></label>
+            <span class="hint">Paste a URL to your brand assets (Drive, Dropbox, website, etc.)</span>
+            <input type="url" id="brand_asset_url" name="brand_asset_url" value="{{ old('brand_asset_url', $applicant->impactDetail->brand_asset_url ?? '') }}" placeholder="https://">
+          </div>
+          <label class="consent"><input type="checkbox" name="consent" value="1" id="consent" @checked(old('consent'))> I confirm the information provided is accurate and understand that uploaded files may be shared outside our organisation for the purpose of the awards.</label>
+          <div class="form-nav">
+            <a class="btn btn-outline" href="{{ route('apply.application', ['step' => 1]) }}">&larr; Back</a>
+            <button class="btn btn-primary" type="submit" id="step3Btn">Submit Application <span class="arw">&rarr;</span></button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+@endsection
+
+@push('scripts')
+<script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+<script src="{{ asset('js/site.js') }}"></script>
+<script>
+$(document).ready(function () {
+    function wordCount(text) {
+        text = $.trim(text || '');
+        return text ? text.split(/\s+/).length : 0;
+    }
+
+    function showErr(message, selector) {
+        $('#err').text(message);
+        if (selector) $(selector).focus();
+        $('html, body').animate({ scrollTop: $('#formTop').offset().top - 20 }, 200);
+        return false;
+    }
+
+    function isValidHttpUrl(value) {
+        var urlToCheck = $.trim(value || '');
+        if (!urlToCheck) {
+            return false;
+        }
+        if (!/^https?:\/\//i.test(urlToCheck)) {
+            urlToCheck = 'https://' + urlToCheck;
+        }
+        try {
+            var parsed = new URL(urlToCheck);
+            return (parsed.protocol === 'http:' || parsed.protocol === 'https:')
+                && parsed.hostname
+                && parsed.hostname.indexOf('.') !== -1;
+        } catch (e) {
+            return false;
+        }
+    }
+
+    var deckMaxBytes = 20 * 1024 * 1024;
+    var deckAllowedExt = ['pdf', 'ppt', 'pptx'];
+
+    function deckExtension(file) {
+        if (!file || !file.name) {
+            return '';
+        }
+        var parts = file.name.split('.');
+        return parts.length > 1 ? parts.pop().toLowerCase() : '';
+    }
+
+    function validateDeckFile(file, clearOnError) {
+        if (!file) {
+            return showErr('Please upload your PPT / PDF', '#deck');
+        }
+        var ext = deckExtension(file);
+        if ($.inArray(ext, deckAllowedExt) === -1) {
+            if (clearOnError) {
+                $('#deck').val('');
+                $('#deckLabel').text('Click to upload PPT / PDF');
+            }
+            return showErr('Only PDF, PPT, or PPTX files are allowed', '#deck');
+        }
+        if (file.size > deckMaxBytes) {
+            if (clearOnError) {
+                $('#deck').val('');
+                $('#deckLabel').text('Click to upload PPT / PDF');
+            }
+            return showErr('Deck must be 20MB or less', '#deck');
+        }
+        $('#err').text('');
+        return true;
+    }
+
+    function toggleOther(checkboxSelector, wrapSelector) {
+        var checked = false;
+        $(checkboxSelector + ':checked').each(function () {
+            if ($(this).val() === 'Other') checked = true;
+        });
+        $(wrapSelector).toggle(checked);
+        if (!checked) $(wrapSelector).find('input').val('');
+    }
+
+    $('.primary-area').on('change', function () { toggleOther('.primary-area', '#primaryAreaOtherWrap'); });
+    $('.users-of').on('change', function () { toggleOther('.users-of', '#usersOtherWrap'); });
+    toggleOther('.primary-area', '#primaryAreaOtherWrap');
+    toggleOther('.users-of', '#usersOtherWrap');
+
+    function toggleUserCount() {
+        var v = $('input[name="adoption_stage"]:checked').val();
+        $('#user_count').toggle(v === 'pilot' || v === 'scale');
+    }
+    $('input[name="adoption_stage"]').on('change', toggleUserCount);
+    toggleUserCount();
+
+    $('textarea[data-words]').each(function () {
+        var $t = $(this);
+        var max = +$t.data('words');
+        var $hint = $t.prev('.hint');
+        var base = $hint.length ? $hint.text() : '';
+        $t.on('input', function () {
+            if ($hint.length) $hint.text(base + ' (' + wordCount($t.val()) + '/' + max + ')');
+        }).trigger('input');
+    });
+
+    $('#deck').on('change', function () {
+        var f = this.files[0];
+        if (!f) {
+            $('#deckLabel').text('Click to upload PPT / PDF');
+            return;
+        }
+        if (!validateDeckFile(f, true)) {
+            return;
+        }
+        $('#deckLabel').text(f.name);
+    });
+
+    $('#step1Form').on('submit', function () {
+        $('#err').text('');
+        if (!$('.primary-area:checked').length) return showErr('Please select at least one primary area of work', '.primary-area:first');
+        if ($('.primary-area[value="Other"]').is(':checked') && $.trim($('#primary_area_other').val()) === '') {
+            return showErr('Please specify the other area of work', '#primary_area_other');
+        }
+        if ($.trim($('#mission_overview').val()) === '') return showErr('Please enter mission overview', '#mission_overview');
+        if (wordCount($('#mission_overview').val()) > 200) return showErr('Mission overview must be 200 words or less', '#mission_overview');
+        $('#step1Btn').prop('disabled', true);
+        return true;
+    });
+
+    $('#step2Form').on('submit', function () {
+        $('#err').text('');
+        if ($.trim($('#solution_name').val()) === '') return showErr('Please enter solution name', '#solution_name');
+        if ($.trim($('#social_problem').val()) === '') return showErr('Please describe the social problem', '#social_problem');
+        if (wordCount($('#social_problem').val()) > 250) return showErr('Social problem must be 250 words or less', '#social_problem');
+        if ($.trim($('#solution_description').val()) === '') return showErr('Please describe your AI solution', '#solution_description');
+        if (wordCount($('#solution_description').val()) > 250) return showErr('Solution description must be 250 words or less', '#solution_description');
+        if (!$('.users-of:checked').length) return showErr('Please select users of the solution', '.users-of:first');
+        if ($('.users-of[value="Other"]').is(':checked') && $.trim($('#users_other').val()) === '') {
+            return showErr('Please specify other users', '#users_other');
+        }
+        if ($.trim($('#technical_details').val()) === '') return showErr('Please share technical details', '#technical_details');
+        if (wordCount($('#technical_details').val()) > 200) return showErr('Technical details must be 200 words or less', '#technical_details');
+        if ($.trim($('#demo_video_url').val()) === '') return showErr('Please add demo video link', '#demo_video_url');
+        if (!isValidHttpUrl($('#demo_video_url').val())) return showErr('Please enter a valid demo video link', '#demo_video_url');
+        if ($.trim($('#testimonial_video_url').val()) === '') return showErr('Please add testimonial video link', '#testimonial_video_url');
+        if (!isValidHttpUrl($('#testimonial_video_url').val())) return showErr('Please enter a valid testimonial video link', '#testimonial_video_url');
+        $('#step2Btn').prop('disabled', true);
+        return true;
+    });
+
+    $('#step3Form').on('submit', function () {
+        $('#err').text('');
+        if (!$('input[name="adoption_stage"]:checked').length) return showErr('Please select adoption stage', 'input[name="adoption_stage"]:first');
+        var stage = $('input[name="adoption_stage"]:checked').val();
+        if ((stage === 'pilot' || stage === 'scale') && $.trim($('#user_count').val()) === '') {
+            return showErr('Please enter number of users', '#user_count');
+        }
+        if ($.trim($('#success_measurement').val()) === '') return showErr('Please describe how you measure success', '#success_measurement');
+        if (wordCount($('#success_measurement').val()) > 250) return showErr('Success measurement must be 250 words or less', '#success_measurement');
+        if ($.trim($('#outcomes_impact').val()) === '') return showErr('Please describe outcomes / impact', '#outcomes_impact');
+        if (wordCount($('#outcomes_impact').val()) > 250) return showErr('Outcomes must be 250 words or less', '#outcomes_impact');
+        if (!validateDeckFile($('#deck')[0].files[0], false)) return false;
+        if ($.trim($('#brand_asset_url').val()) === '') return showErr('Please enter the brand asset URL', '#brand_asset_url');
+        if (!isValidHttpUrl($('#brand_asset_url').val())) return showErr('Please enter a valid brand asset URL', '#brand_asset_url');
+        if (!$('#consent').is(':checked')) return showErr('Please confirm the consent checkbox', '#consent');
+        $('#step3Btn').prop('disabled', true);
+        return true;
+    });
+});
+</script>
+@endpush

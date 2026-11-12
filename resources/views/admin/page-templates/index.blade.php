@@ -1,0 +1,49 @@
+@extends('admin.layouts.app')
+
+@section('title', 'Thank You Pages')
+@section('page_title', 'Thank You Pages')
+@section('breadcrumb', 'Manage')
+
+@section('content')
+<div class="row">
+    <div class="col-12 mt-3">
+        @if (session('status'))
+            <div class="alert alert-success">{{ session('status') }}</div>
+        @endif
+
+        <div class="card">
+            <div class="card-body">
+                <!--<h4 class="header-title">Thank you page templates</h4>
+                <p class="text-muted">Edit the HTML shown on the frontend thank-you screens after each submission type. Placeholders are replaced at display time.</p>-->
+
+                <div class="single-table" style="margin-top: 0px;">
+                    <div class="table-responsive">
+                        <table class="table table-hover text-center">
+                            <thead class="text-uppercase">
+                                <tr>
+                                    <th>Name</th>
+                                    <!--<th>Key</th>-->
+                                    <th>Page title</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($templates as $template)
+                                    <tr>
+                                        <td class="text-left">{{ $template->name }}</td>
+                                        <!--<td><code>{{ $template->key }}</code></td>-->
+                                        <td class="text-left">{{ $template->page_title }}</td>
+                                        <td>
+                                            <a class="btn btn-xs btn-primary" href="{{ route('admin.page-templates.edit', $template) }}">Edit</a>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@endsection

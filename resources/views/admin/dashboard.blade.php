@@ -1,0 +1,20 @@
+@extends('admin.layouts.app')
+
+@section('title', 'Dashboard')
+@section('page_title', 'Dashboard')
+@section('breadcrumb', 'Overview')
+
+@section('content')
+<div class="row">
+<div class="col-lg-12 mt-3">
+<div class="card">
+<div class="card-body">
+<h4 class="header-title">Welcome, {{ auth()->user()->name }}</h4>
+<p class="text-muted mb-0">
+You are signed in to the superadmin panel. Use the sidebar to manage awards content as features are added.
+</p>
+</div>
+</div>
+</div>
+</div>
+@endsection

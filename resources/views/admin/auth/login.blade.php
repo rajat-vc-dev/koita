@@ -1,0 +1,43 @@
+@extends('admin.layouts.guest')
+
+@section('title', 'Superadmin Login')
+
+@section('content')
+<div class="login-area">
+<div class="login-card">
+<img src="{{ asset('assets/admin/images/dash-banner.webp') }}" alt="" title="">
+</div>
+<div class="login-card">
+<div class="login-box ptb--100">
+<form method="POST" action="{{ route('admin.login.store') }}">
+@csrf
+<div class="login-form-head">
+<h4>Superadmin Sign In</h4>
+<p>Sign in to access and manage the Koita Awards platform.</p>
+</div>
+<div class="login-form-body">
+@if ($errors->any())
+<div class="alert alert-danger" role="alert">
+{{ $errors->first() }}
+</div>
+@endif
+
+<div class="form-gp{{ old('email') ? ' focused' : '' }}">
+<label for="email">User Name</label>
+<input type="text" id="email" name="email" value="{{ old('email') }}" required autofocus>
+<i class="ti-email"></i>
+</div>
+<div class="form-gp">
+<label for="password">Password</label>
+<input type="password" id="password" name="password" required>
+<i class="ti-lock"></i>
+</div>
+<div class="submit-btn-area">
+<button id="form_submit" type="submit">Sign In <i class="ti-arrow-right"></i></button>
+</div>
+</div>
+</form>
+</div>
+</div>
+</div>
+@endsection

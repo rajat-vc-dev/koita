@@ -1,0 +1,343 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Attributes\Fillable;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasOne;
+
+#[Fillable([
+    'organisation_name',
+    'website',
+    'contact_person_name',
+    'designation',
+    'email',
+    'mobile',
+    'organisation_type',
+    'terms_accepted_at',
+    'is_registered',
+    'certificate_80g_path',
+    'certificate_12a_path',
+    'section_8_certificate_path',
+    'coi_path',
+    'pan_path',
+    'gst_path',
+    'access_code',
+    'application_status',
+    'invite_sent_at',
+    'application_submitted_at',
+    'rejected_at',
+    'document_resubmit_token',
+    'document_resubmit_requested_at',
+    'document_resubmit_expires_at',
+    'documents_resubmitted_at',
+])]
+class Applicant extends Model
+{
+    public const STATUS_INTEREST = 'interest_registered';
+
+    public const STATUS_INVITED = 'invited';
+
+    public const STATUS_IN_PROGRESS = 'application_in_progress';
+
+    public const STATUS_SUBMITTED = 'application_submitted';
+
+    public const STATUS_DOCS_RESUBMIT = 'documents_resubmit_requested';
+
+    public const STATUS_REJECTED = 'rejected';
+
+    public const TYPE_SECTION_8 = 'section_8_company';
+
+    public const TYPE_TRUST = 'trust';
+
+    public const TYPE_PVT_LLP = 'pvt_ltd_llp';
+
+    public const DOCUMENT_MIMES = 'pdf,jpg,jpeg,webp,png';
+
+    public const DOCUMENT_MAX_KB = 5120;
+
+    /** Max length for organisation / contact / website / email text fields. */
+    public const FIELD_MAX = 255;
+
+    /** Max length for mobile number input (formatting chars allowed). */
+    public const MOBILE_MAX = 40;
+
+    /**
+     * form input name => database path column, per organisation type.
+     *
+     * @return array<string, array<string, string>>
+     */
+    public static function documentsByType(): array
+    {
+        return [
+            self::TYPE_SECTION_8 => [
+                'section_8_certificate' => 'section_8_certificate_path',
+                'certificate_12a' => 'certificate_12a_path',
+                'certificate_80g' => 'certificate_80g_path',
+            ],
+            self::TYPE_TRUST => [
+                'section_8_certificate' => 'section_8_certificate_path',
+                'certificate_12a' => 'certificate_12a_path',
+                'certificate_80g' => 'certificate_80g_path',
+            ],
+            self::TYPE_PVT_LLP => [
+                'coi' => 'coi_path',
+                'pan' => 'pan_path',
+                'gst' => 'gst_path',
+            ],
+        ];
+    }
+
+    /**
+     * Download route type key => database path column.
+     *
+     * @return array<string, string>
+     */
+    public static function fileTypeColumns(): array
+    {
+        return [
+            'certificate_80g' => 'certificate_80g_path',
+            'certificate_12a' => 'certificate_12a_path',
+            'section_8' => 'section_8_certificate_path',
+            'coi' => 'coi_path',
+            'pan' => 'pan_path',
+            'gst' => 'gst_path',
+        ];
+    }
+
+    /**
+     * @return array<string, string>
+     */
+    public static function organisationTypes(): array
+    {
+        return [
+            self::TYPE_SECTION_8 => 'Section 8 Company',
+            self::TYPE_TRUST => 'Trust / Societies',
+            self::TYPE_PVT_LLP => 'Pvt. Ltd / LLP',
+        ];
+    }
+
+    /**
+     * Form field names that are required for the given organisation type.
+     *
+     * @return list<string>
+     */
+    public static function requiredDocumentFieldsForType(?string $type): array
+    {
+        return match ($type) {
+            self::TYPE_SECTION_8 => ['section_8_certificate', 'certificate_80g'],
+            self::TYPE_TRUST => ['certificate_80g'],
+            self::TYPE_PVT_LLP => ['coi', 'pan', 'gst'],
+            default => [],
+        };
+    }
+
+    /**
+     * Human labels for form fields.
+     *
+     * @return array<string, string>
+     */
+    public static function documentFieldLabels(): array
+    {
+        return [
+            'section_8_certificate' => 'Section 8 Certificate',
+            'certificate_12a' => '12A Certificate',
+            'certificate_80g' => '80G Certificate',
+            'coi' => 'Certificate of Incorporation (COI)',
+            'pan' => 'PAN',
+            'gst' => 'GST',
+        ];
+    }
+
+    /**
+     * Map form field name to private file route type.
+     *
+     * @return array<string, string>
+     */
+    public static function formFieldToFileType(): array
+    {
+        return [
+            'section_8_certificate' => 'section_8',
+            'certificate_12a' => 'certificate_12a',
+            'certificate_80g' => 'certificate_80g',
+            'coi' => 'coi',
+            'pan' => 'pan',
+            'gst' => 'gst',
+        ];
+    }
+
+    protected function casts(): array
+    {
+        return [
+            'is_registered' => 'boolean',
+            'invite_sent_at' => 'datetime',
+            'application_submitted_at' => 'datetime',
+            'rejected_at' => 'datetime',
+            'terms_accepted_at' => 'datetime',
+            'document_resubmit_requested_at' => 'datetime',
+            'document_resubmit_expires_at' => 'datetime',
+            'documents_resubmitted_at' => 'datetime',
+        ];
+    }
+
+    public function organizationDetail(): HasOne
+    {
+        return $this->hasOne(ApplicantOrganizationDetail::class);
+    }
+
+    public function aiSolution(): HasOne
+    {
+        return $this->hasOne(ApplicantAiSolution::class);
+    }
+
+    public function impactDetail(): HasOne
+    {
+        return $this->hasOne(ApplicantImpactDetail::class);
+    }
+
+    public function organisationTypeLabel(): string
+    {
+        return self::organisationTypes()[$this->organisation_type] ?? '—';
+    }
+
+    public function isRejected(): bool
+    {
+        return $this->application_status === self::STATUS_REJECTED;
+    }
+
+    /**
+     * Eligible for access code / invite / resubmit when type + ≥1 matching document.
+     */
+    public function hasEligibleDocuments(): bool
+    {
+        $type = $this->organisation_type;
+        if (! $type || ! isset(self::documentsByType()[$type])) {
+            return false;
+        }
+
+        foreach (self::documentsByType()[$type] as $column) {
+            if (! empty($this->{$column})) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public function filePathForType(string $type): ?string
+    {
+        $column = self::fileTypeColumns()[$type] ?? null;
+
+        return $column ? $this->{$column} : null;
+    }
+
+    public function fileUrl(string $type): ?string
+    {
+        return $this->filePathForType($type)
+            ? route('admin.applicants.files.show', ['applicant' => $this, 'type' => $type])
+            : null;
+    }
+
+    public function certificate80gUrl(): ?string
+    {
+        return $this->fileUrl('certificate_80g');
+    }
+
+    public function section8CertificateUrl(): ?string
+    {
+        return $this->fileUrl('section_8');
+    }
+
+    public function certificate12aUrl(): ?string
+    {
+        return $this->fileUrl('certificate_12a');
+    }
+
+    public function coiUrl(): ?string
+    {
+        return $this->fileUrl('coi');
+    }
+
+    public function panUrl(): ?string
+    {
+        return $this->fileUrl('pan');
+    }
+
+    public function gstUrl(): ?string
+    {
+        return $this->fileUrl('gst');
+    }
+
+    /**
+     * Short labels for email document lines (org-type scoped).
+     *
+     * @return array<string, string>
+     */
+    public static function emailDocumentLabels(): array
+    {
+        return [
+            'section_8_certificate' => 'Section 8',
+            'certificate_12a' => '12A',
+            'certificate_80g' => '80G',
+            'coi' => 'COI',
+            'pan' => 'PAN',
+            'gst' => 'GST',
+        ];
+    }
+
+    /**
+     * Multiline document list for the selected organisation type only.
+     * Missing uploads show as NA.
+     */
+    public function documentsListForEmail(): string
+    {
+        $type = $this->organisation_type;
+        $docMap = self::documentsByType()[$type] ?? [];
+        if ($docMap === []) {
+            return 'NA';
+        }
+
+        $labels = self::emailDocumentLabels();
+        if ($type === self::TYPE_TRUST) {
+            $labels['section_8_certificate'] = 'COI';
+        }
+        $fieldToFileType = self::formFieldToFileType();
+        $lines = [];
+
+        foreach ($docMap as $field => $column) {
+            $label = $labels[$field] ?? self::documentFieldLabels()[$field] ?? $field;
+            $fileType = $fieldToFileType[$field] ?? null;
+            $url = $fileType ? $this->fileUrl($fileType) : null;
+            $lines[] = $label.': '.($url ?: 'NA');
+        }
+
+        return implode("\n", $lines);
+    }
+
+    public function statusLabel(): string
+    {
+        return match ($this->application_status) {
+            self::STATUS_INVITED => 'Invited',
+            self::STATUS_IN_PROGRESS => 'In progress',
+            self::STATUS_SUBMITTED => 'Submitted',
+            self::STATUS_DOCS_RESUBMIT => 'Docs resubmit requested',
+            self::STATUS_REJECTED => 'Rejected',
+            default => 'Applicants registration',
+        };
+    }
+
+    public function canRequestDocumentResubmit(): bool
+    {
+        return $this->is_registered === true && ! $this->isRejected();
+    }
+
+    public function canBeInvited(): bool
+    {
+        return (bool) $this->access_code && ! $this->isRejected();
+    }
+
+    public function canBeRejected(): bool
+    {
+        return ! $this->isRejected();
+    }
+}

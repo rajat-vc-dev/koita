@@ -1,0 +1,155 @@
+@extends('admin.layouts.app')
+
+@section('title', 'Applicants')
+@section('page_title', 'Applicants')
+@section('breadcrumb', 'Registrations')
+
+@push('styles')
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.8/css/dataTables.bootstrap4.min.css">
+@endpush
+
+@section('content')
+<div class="row">
+    <div class="col-12 mt-3">
+        @if (session('status'))
+            <div class="alert alert-success">{{ session('status') }}</div>
+        @endif
+        @if (session('error'))
+            <div class="alert alert-danger">{{ session('error') }}</div>
+        @endif
+
+        <div class="card">
+            <div class="card-body">
+                <div class="d-flex flex-wrap justify-content-between align-items-center mb-3">
+                    <h4 class="header-title mb-0">Applicants registration</h4>
+                    <a href="{{ route('admin.applicants.export') }}" id="exportExcel" class="btn btn-success btn-sm">
+                        <i class="ti-export"></i> Export Excel
+                    </a>
+                </div>
+
+                <div class="row mb-3" id="applicants-filters">
+                    <div class="col-md-3 mb-2">
+                        <label for="filter_date_from">Date from</label>
+                        <input type="date" id="filter_date_from" class="form-control form-control-sm">
+                    </div>
+                    <div class="col-md-3 mb-2">
+                        <label for="filter_date_to">Date to</label>
+                        <input type="date" id="filter_date_to" class="form-control form-control-sm">
+                    </div>
+                    <div class="col-md-2 mb-2">
+                        <label for="filter_registered">Eligible</label>
+                        <select id="filter_registered" class="form-control form-control-sm">
+                            <option value="all">All</option>
+                            <option value="yes">Yes</option>
+                            <option value="no">No</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2 mb-2">
+                        <label for="filter_org_type">Org type</label>
+                        <select id="filter_org_type" class="form-control form-control-sm">
+                            <option value="all">All</option>
+                            @foreach ($organisationTypes as $value => $label)
+                                <option value="{{ $value }}">{{ $label }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="col-md-2 mb-2">
+                        <label for="filter_status">Status</label>
+                        <select id="filter_status" class="form-control form-control-sm">
+                            <option value="all">All</option>
+                            @foreach ($statuses as $value => $label)
+                                <option value="{{ $value }}">{{ $label }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="col-md-1 mb-2 d-flex align-items-end">
+                        <button type="button" id="filter_reset" class="btn btn-light btn-sm btn-block">Reset</button>
+                    </div>
+                </div>
+
+                <div class="data-tables">
+                    <table id="applicants-table" class="text-center table table-hover">
+                        <thead class="bg-light text-capitalize">
+                            <tr>
+                                <th>Organisation</th>
+                                <th>Contact</th>
+                                <th>Email</th>
+                                <th>Org type</th>
+                                <th>Status</th>
+                                <th>Registered at</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@endsection
+
+@push('scripts')
+<script src="https://cdn.datatables.net/1.13.8/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.8/js/dataTables.bootstrap4.min.js"></script>
+<script>
+$(function () {
+    function filterParams() {
+        return {
+            date_from: $('#filter_date_from').val(),
+            date_to: $('#filter_date_to').val(),
+            registered: $('#filter_registered').val(),
+            organisation_type: $('#filter_org_type').val(),
+            status: $('#filter_status').val()
+        };
+    }
+
+    function updateExportLink() {
+        var params = $.param(filterParams());
+        $('#exportExcel').attr('href', '{{ route('admin.applicants.export') }}' + (params ? ('?' + params) : ''));
+    }
+
+    var table = $('#applicants-table').DataTable({
+        processing: true,
+        serverSide: true,
+        ajax: {
+            url: '{{ route('admin.applicants.data') }}',
+            data: function (d) {
+                var filters = filterParams();
+                d.date_from = filters.date_from;
+                d.date_to = filters.date_to;
+                d.registered = filters.registered;
+                d.organisation_type = filters.organisation_type;
+                d.status = filters.status;
+            }
+        },
+        order: [[5, 'desc']],
+        columns: [
+            { data: 'organisation_name', name: 'organisation_name' },
+            { data: 'contact_person_name', name: 'contact_person_name' },
+            { data: 'email', name: 'email' },
+            { data: 'organisation_type_label', name: 'organisation_type', orderable: true, searchable: false },
+            { data: 'status_label', name: 'application_status' },
+            { data: 'registered_at', name: 'created_at' },
+            { data: 'actions', name: 'actions', orderable: false, searchable: false }
+        ]
+    });
+
+    $('#filter_date_from, #filter_date_to, #filter_registered, #filter_org_type, #filter_status').on('change', function () {
+        updateExportLink();
+        table.ajax.reload();
+    });
+
+    $('#filter_reset').on('click', function () {
+        $('#filter_date_from').val('');
+        $('#filter_date_to').val('');
+        $('#filter_registered').val('all');
+        $('#filter_org_type').val('all');
+        $('#filter_status').val('all');
+        updateExportLink();
+        table.ajax.reload();
+    });
+
+    updateExportLink();
+});
+</script>
+@endpush

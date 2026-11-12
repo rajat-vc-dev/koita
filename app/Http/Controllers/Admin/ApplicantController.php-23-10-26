@@ -1,0 +1,360 @@
+<?php
+
+namespace App\Http\Controllers\Admin;
+
+use App\Http\Controllers\Controller;
+use App\Mail\TemplatedMail;
+use App\Models\Applicant;
+use App\Models\EmailTemplate;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Str;
+use Illuminate\View\View;
+use Symfony\Component\HttpFoundation\StreamedResponse;
+use Yajra\DataTables\Facades\DataTables;
+
+class ApplicantController extends Controller
+{
+    public function index(): View
+    {
+        $statuses = [
+            Applicant::STATUS_INTEREST => 'Applicants registration',
+            Applicant::STATUS_INVITED => 'Invited',
+            Applicant::STATUS_IN_PROGRESS => 'In progress',
+            Applicant::STATUS_SUBMITTED => 'Submitted',
+            Applicant::STATUS_DOCS_RESUBMIT => 'Docs resubmit requested',
+            Applicant::STATUS_REJECTED => 'Rejected',
+        ];
+
+        $organisationTypes = Applicant::organisationTypes();
+
+        return view('admin.applicants.index', compact('statuses', 'organisationTypes'));
+    }
+
+    public function data(Request $request): JsonResponse
+    {
+        $query = $this->filteredApplicantsQuery($request)->select([
+            'id',
+            'organisation_name',
+            'contact_person_name',
+            'email',
+            'organisation_type',
+            'is_registered',
+            'access_code',
+            'application_status',
+            'invite_sent_at',
+            'created_at',
+        ]);
+
+        return DataTables::of($query)
+            ->addColumn('organisation_type_label', fn (Applicant $a) => $a->organisationTypeLabel())
+            ->addColumn('status_label', fn (Applicant $a) => $a->statusLabel())
+            ->addColumn('registered_at', fn (Applicant $a) => $a->created_at?->format('Y-m-d H:i'))
+            ->addColumn('actions', function (Applicant $a) {
+                $view = route('admin.applicants.show', $a);
+                $csrf = csrf_token();
+                $viewBtn = '<a href="'.$view.'" class="btn btn-xs btn-info" title="View"><i class="ti-eye"></i></a>';
+
+                if ($a->isRejected() || ! $a->is_registered) {
+                    return $viewBtn;
+                }
+
+                $invite = route('admin.applicants.invite', $a);
+                $resubmit = route('admin.applicants.resubmit-documents', $a);
+                $reject = route('admin.applicants.reject', $a);
+                $canInvite = $a->canBeInvited() ? '' : 'disabled';
+                $canResubmit = $a->canRequestDocumentResubmit() ? '' : 'disabled';
+
+                return <<<HTML
+                    {$viewBtn}
+                    <form action="{$invite}" method="POST" style="display:inline-block" onsubmit="return confirm('Send application invite email to this applicant?');">
+                        <input type="hidden" name="_token" value="{$csrf}">
+                        <button type="submit" class="btn btn-xs btn-primary" title="Send apply invite" {$canInvite}><i class="ti-email"></i></button>
+                    </form>
+                    <form action="{$resubmit}" method="POST" style="display:inline-block" onsubmit="return confirm('Send document resubmit link to this applicant?');">
+                        <input type="hidden" name="_token" value="{$csrf}">
+                        <button type="submit" class="btn btn-xs btn-warning" title="Request document resubmit" {$canResubmit}><i class="ti-reload"></i></button>
+                    </form>
+                    <form action="{$reject}" method="POST" style="display:inline-block" onsubmit="return confirm('Reject this application? The applicant will be emailed and blocked from applying.');">
+                        <input type="hidden" name="_token" value="{$csrf}">
+                        <button type="submit" class="btn btn-xs btn-danger" title="Reject application"><i class="ti-close"></i></button>
+                    </form>
+                HTML;
+            })
+            ->rawColumns(['actions'])
+            ->make(true);
+    }
+
+    public function export(Request $request): StreamedResponse
+    {
+        $request->validate([
+            'date_from' => ['nullable', 'date'],
+            'date_to' => ['nullable', 'date'],
+            'registered' => ['nullable', 'in:all,yes,no'],
+            'organisation_type' => ['nullable', 'string', 'max:64'],
+            'status' => ['nullable', 'string', 'max:64'],
+        ]);
+
+        $filename = 'applicants-'.now()->format('Y-m-d-His').'.csv';
+
+        $headers = [
+            'Content-Type' => 'text/csv; charset=UTF-8',
+            'Content-Disposition' => 'attachment; filename="'.$filename.'"',
+        ];
+
+        $query = $this->filteredApplicantsQuery($request)
+            ->with(['organizationDetail', 'aiSolution', 'impactDetail'])
+            ->orderByDesc('created_at');
+
+        return response()->streamDownload(function () use ($query): void {
+            $out = fopen('php://output', 'w');
+            fwrite($out, "\xEF\xBB\xBF");
+            fputcsv($out, [
+                'ID',
+                'Organisation',
+                'Website',
+                'Contact person',
+                'Designation',
+                'Email',
+                'Mobile',
+                'Organisation type',
+                'Eligible (has documents)',
+                'Has Section 8 certificate',
+                'Has 12A certificate',
+                'Has 80G certificate',
+                'Has COI',
+                'Has PAN',
+                'Has GST',
+                'Access code',
+                'Status',
+                'Invite sent at',
+                'Doc resubmit requested at',
+                'Doc resubmit expires at',
+                'Documents resubmitted at',
+                'Application submitted at',
+                'Rejected at',
+                'Registered at',
+                'Updated at',
+                'App org name',
+                'Primary areas',
+                'Primary area other',
+                'Mission overview',
+                'Solution name',
+                'Social problem',
+                'Solution description',
+                'Users of solution',
+                'Users other',
+                'Technical details',
+                'Demo video URL',
+                'Testimonial video URL',
+                'Adoption stage',
+                'User count',
+                'Success measurement',
+                'Outcomes / impact',
+                'Has deck upload',
+                'Brand asset URL',
+                'Consent',
+            ]);
+
+            $query->chunkById(100, function ($applicants) use ($out): void {
+                foreach ($applicants as $a) {
+                    /** @var Applicant $a */
+                    $org = $a->organizationDetail;
+                    $sol = $a->aiSolution;
+                    $impact = $a->impactDetail;
+
+                    fputcsv($out, [
+                        $a->id,
+                        $a->organisation_name,
+                        $a->website,
+                        $a->contact_person_name,
+                        $a->designation,
+                        $a->email,
+                        $a->mobile,
+                        $a->organisationTypeLabel(),
+                        $a->is_registered ? 'Yes' : 'No',
+                        $a->section_8_certificate_path ? 'Yes' : 'No',
+                        $a->certificate_12a_path ? 'Yes' : 'No',
+                        $a->certificate_80g_path ? 'Yes' : 'No',
+                        $a->coi_path ? 'Yes' : 'No',
+                        $a->pan_path ? 'Yes' : 'No',
+                        $a->gst_path ? 'Yes' : 'No',
+                        $a->access_code,
+                        $a->statusLabel(),
+                        $a->invite_sent_at?->format('Y-m-d H:i'),
+                        $a->document_resubmit_requested_at?->format('Y-m-d H:i'),
+                        $a->document_resubmit_expires_at?->format('Y-m-d H:i'),
+                        $a->documents_resubmitted_at?->format('Y-m-d H:i'),
+                        $a->application_submitted_at?->format('Y-m-d H:i'),
+                        $a->rejected_at?->format('Y-m-d H:i'),
+                        $a->created_at?->format('Y-m-d H:i'),
+                        $a->updated_at?->format('Y-m-d H:i'),
+                        $org?->organization_name,
+                        $org ? implode(', ', $org->primary_areas ?? []) : null,
+                        $org?->primary_area_other,
+                        $org?->mission_overview,
+                        $sol?->solution_name,
+                        $sol?->social_problem,
+                        $sol?->solution_description,
+                        $sol ? implode(', ', $sol->users_of_solution ?? []) : null,
+                        $sol?->users_other,
+                        $sol?->technical_details,
+                        $sol?->demo_video_url,
+                        $sol?->testimonial_video_url,
+                        $impact?->adoption_stage,
+                        $impact?->user_count,
+                        $impact?->success_measurement,
+                        $impact?->outcomes_impact,
+                        $impact?->deck_path ? 'Yes' : 'No',
+                        $impact?->brand_asset_url,
+                        $impact ? ($impact->consent ? 'Yes' : 'No') : null,
+                    ]);
+                }
+            });
+
+            fclose($out);
+        }, $filename, $headers);
+    }
+
+    public function show(Applicant $applicant): View
+    {
+        $applicant->load(['organizationDetail', 'aiSolution', 'impactDetail']);
+
+        return view('admin.applicants.show', compact('applicant'));
+    }
+
+    public function invite(Applicant $applicant): RedirectResponse
+    {
+        if (! $applicant->canBeInvited()) {
+            return back()->with('error', 'This applicant cannot be invited (missing access code or rejected).');
+        }
+
+        $template = EmailTemplate::query()->where('key', EmailTemplate::USER_APPLY_INVITE)->first();
+
+        if (! $template) {
+            return back()->with('error', 'Invite email template is missing. Seed email templates first.');
+        }
+
+        $data = [
+            'contact_person_name' => $applicant->contact_person_name,
+            'organisation_name' => $applicant->organisation_name,
+            'email' => $applicant->email,
+            'access_code' => $applicant->access_code,
+            'apply_url' => route('apply'),
+        ];
+
+        Mail::to($applicant->email)->send(new TemplatedMail($template, $data));
+
+        $applicant->update([
+            'invite_sent_at' => now(),
+            'application_status' => $applicant->application_status === Applicant::STATUS_SUBMITTED
+                ? $applicant->application_status
+                : Applicant::STATUS_INVITED,
+        ]);
+
+        return back()->with('status', 'Invite email sent to '.$applicant->email);
+    }
+
+    public function requestDocumentResubmit(Applicant $applicant): RedirectResponse
+    {
+        if (! $applicant->canRequestDocumentResubmit()) {
+            return back()->with('error', 'Document resubmit is only available for eligible (non-rejected) applicants with documents.');
+        }
+
+        $template = EmailTemplate::query()->where('key', EmailTemplate::USER_DOCUMENT_RESUBMIT)->first();
+
+        if (! $template) {
+            return back()->with('error', 'Document resubmit email template is missing. Seed email templates first.');
+        }
+
+        $token = Str::random(64);
+        $validDays = (int) config('koita.document_resubmit_days', 7);
+
+        $applicant->update([
+            'document_resubmit_token' => $token,
+            'document_resubmit_requested_at' => now(),
+            'document_resubmit_expires_at' => now()->addDays($validDays),
+            'application_status' => $applicant->application_status === Applicant::STATUS_SUBMITTED
+                ? $applicant->application_status
+                : Applicant::STATUS_DOCS_RESUBMIT,
+        ]);
+
+        $data = [
+            'contact_person_name' => $applicant->contact_person_name,
+            'organisation_name' => $applicant->organisation_name,
+            'email' => $applicant->email,
+            'organisation_type' => $applicant->organisationTypeLabel(),
+            'resubmit_url' => route('documents.resubmit', ['token' => $token]),
+            'resubmit_valid_days' => $validDays,
+        ];
+
+        Mail::to($applicant->email)->send(new TemplatedMail($template, $data));
+
+        return back()->with('status', 'Document resubmit link emailed to '.$applicant->email);
+    }
+
+    public function reject(Applicant $applicant): RedirectResponse
+    {
+        if (! $applicant->canBeRejected()) {
+            return back()->with('error', 'This application is already rejected.');
+        }
+
+        $template = EmailTemplate::query()->where('key', EmailTemplate::USER_APPLICATION_REJECTED)->first();
+
+        if (! $template) {
+            return back()->with('error', 'Rejection email template is missing. Seed email templates first.');
+        }
+
+        $applicant->update([
+            'application_status' => Applicant::STATUS_REJECTED,
+            'rejected_at' => now(),
+            'document_resubmit_token' => null,
+            'document_resubmit_expires_at' => null,
+        ]);
+
+        Mail::to($applicant->email)->send(new TemplatedMail($template, [
+            'contact_person_name' => $applicant->contact_person_name,
+            'organisation_name' => $applicant->organisation_name,
+            'email' => $applicant->email,
+            'organisation_type' => $applicant->organisationTypeLabel(),
+        ]));
+
+        return back()->with('status', 'Application rejected and email sent to '.$applicant->email);
+    }
+
+    /**
+     * @return Builder<Applicant>
+     */
+    private function filteredApplicantsQuery(Request $request): Builder
+    {
+        $query = Applicant::query();
+
+        if ($request->filled('date_from')) {
+            $query->whereDate('created_at', '>=', $request->input('date_from'));
+        }
+
+        if ($request->filled('date_to')) {
+            $query->whereDate('created_at', '<=', $request->input('date_to'));
+        }
+
+        $registered = $request->input('registered', 'all');
+        if ($registered === 'yes') {
+            $query->where('is_registered', true);
+        } elseif ($registered === 'no') {
+            $query->where('is_registered', false);
+        }
+
+        if ($request->filled('organisation_type') && $request->input('organisation_type') !== 'all') {
+            $query->where('organisation_type', $request->input('organisation_type'));
+        }
+
+        if ($request->filled('status') && $request->input('status') !== 'all') {
+            $query->where('application_status', $request->input('status'));
+        }
+
+        return $query;
+    }
+}

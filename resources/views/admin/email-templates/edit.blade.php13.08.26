@@ -1,0 +1,46 @@
+@extends('admin.layouts.app')
+
+@section('title', 'Edit Email Template')
+@section('page_title', 'Edit Template')
+@section('breadcrumb', $template->name)
+
+@section('content')
+<div class="row">
+    <div class="col-lg-10 mt-3">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="header-title">{{ $template->name }}</h4>
+                <p class="text-muted mb-3">
+                    Key: <code>{{ $template->key }}</code><br>
+                    Available placeholders:
+                    <code>{{ $template->placeholders }}</code>
+                </p>
+
+                <form method="POST" action="{{ route('admin.email-templates.update', $template) }}">
+                    @csrf
+                    @method('PUT')
+
+                    <div class="form-group">
+                        <label for="subject">Subject</label>
+                        <input type="text" class="form-control @error('subject') is-invalid @enderror" id="subject" name="subject" value="{{ old('subject', $template->subject) }}" required>
+                        @error('subject')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+
+                    <div class="form-group">
+                        <label for="body">Body</label>
+                        <textarea class="form-control @error('body') is-invalid @enderror" id="body" name="body" rows="14" required>{{ old('body', $template->body) }}</textarea>
+                        @error('body')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">Save template</button>
+                    <a href="{{ route('admin.email-templates.index') }}" class="btn btn-light">Cancel</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+@endsection
