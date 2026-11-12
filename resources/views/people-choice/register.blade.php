@@ -40,8 +40,9 @@
                 @endif
 
                 <p class="poll-hint">We use your name and email to verify and record your ballot.</p>
+                <input type="hidden" name="marketing_consent" value="0">
                 <label class="poll-consent">
-                    <input type="checkbox" name="marketing_consent" value="1" @checked(old('marketing_consent'))>
+                    <input type="checkbox" name="marketing_consent" value="1" @checked(old('marketing_consent', true))>
                     <span>I agree to receive marketing communications, campaigns, and relevant updates from ILSS (optional).</span>
                 </label>
                 @error('marketing_consent') <p class="poll-error" role="alert">{{ $message }}</p> @enderror
