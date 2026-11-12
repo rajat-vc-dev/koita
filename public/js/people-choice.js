@@ -98,18 +98,76 @@ $(function () {
     let ranked = $choices.filter(':checked').get()
         .sort((left, right) => left.dataset.rank - right.dataset.rank).slice(0, max);
 
+    const $rankedList = $('#poll-ranked-choices');
+    const $trayHint = $('.poll-tray-hint');
+    const ordinals = ['1st', '2nd', '3rd', '4th', '5th'];
+
     function renderChoices() {
         $choices.each(function () {
-            const rank = ranked.indexOf(this) + 1;
-            $(this).prop({
-                checked: rank > 0,
-                disabled: !$submit.length || (rank === 0 && ranked.length >= max),
-            }).next().text(rank ? 'Choice ' + rank + ' · Remove' : 'Vote');
+            const rank = ranked.indexOf(this);
+            const selected = rank >= 0;
+            const title = this.dataset.title;
+            const $choice = $(this);
+            const $card = $choice.closest('.poll-card');
+
+            $choice.prop({
+                checked: selected,
+                disabled: !$submit.length || (!selected && ranked.length >= max),
+            }).attr('aria-label', selected
+                ? title + ', ' + ordinals[rank] + ' choice. Uncheck to remove.'
+                : 'Vote for ' + title);
+            $choice.next().text(selected ? ordinals[rank] + ' choice ✓' : 'Vote');
+            $card.toggleClass('poll-card-selected', selected)
+                .find('.poll-card-rank').prop('hidden', !selected).text(selected ? ordinals[rank] : '');
+        });
+
+        $rankedList.empty().prop('hidden', !ranked.length);
+        $trayHint.prop('hidden', ranked.length > 0);
+
+        ranked.forEach((choice, index) => {
+            const title = choice.dataset.title;
+            const $item = $('<li>', { class: 'poll-ranked-item' }).appendTo($rankedList);
+            $('<span>', { class: 'poll-ranked-number', 'aria-hidden': 'true' }).text(index + 1).appendTo($item);
+            $('<span>', { class: 'poll-ranked-title' }).text(title).appendTo($item);
+
+            [
+                ['up', '▲', 'Move ' + title + ' up', index === 0],
+                ['down', '▼', 'Move ' + title + ' down', index === ranked.length - 1],
+                ['remove', '×', 'Remove ' + title, false],
+            ].forEach(([action, symbol, label, disabled]) => {
+                $('<button>', {
+                    type: 'button',
+                    'data-action': action,
+                    'aria-label': label,
+                    disabled,
+                }).text(symbol).appendTo($item);
+            });
         });
 
         $count.text(ranked.length + ' of ' + max + ' selected · minimum ' + min + ' required');
         $submit.prop('disabled', ranked.length < min);
     }
+
+    $rankedList.on('click', 'button', function () {
+        const index = $(this).closest('li').index();
+        const action = this.dataset.action;
+        const choice = ranked[index];
+
+        if (action === 'remove') {
+            ranked.splice(index, 1);
+            renderChoices();
+            const $next = $rankedList.children().eq(Math.min(index, ranked.length - 1));
+            ($next.find('[data-action="remove"]')[0] || choice).focus({ preventScroll: true });
+            return;
+        }
+
+        const target = index + (action === 'up' ? -1 : 1);
+        [ranked[index], ranked[target]] = [ranked[target], ranked[index]];
+        renderChoices();
+        const $item = $rankedList.children().eq(target);
+        const button = $item.find('[data-action="' + action + '"]:enabled')[0] || $item.find('button:enabled')[0];
+        button.focus({ preventScroll: true });
+    });
 
     $choices.removeAttr('name').on('change', function () {
         ranked = this.checked ? [...ranked, this] : ranked.filter(selected => selected !== this);

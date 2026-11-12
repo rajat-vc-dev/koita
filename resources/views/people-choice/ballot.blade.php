@@ -34,6 +34,7 @@
                     @endphp
                     <article class="poll-card">
                         <div class="poll-card-banner">
+                            <span class="poll-card-rank" aria-hidden="true" hidden></span>
                             @if ($entry->logo_path)
                                 <img src="{{ route('people-choice.logo', $entry->id) }}" alt="" loading="lazy">
                             @else
@@ -53,7 +54,7 @@
                                 <button type="button" class="poll-button poll-secondary" data-dialog="profile-{{ $entry->id }}" hidden>Read More</button>
                                 <label class="poll-choice">
                                     <input type="checkbox" name="choices[]" value="{{ $entry->id }}" @checked($rank !== false)
-                                           data-rank="{{ $rank === false ? '' : $rank + 1 }}" aria-label="Vote for {{ $entry->title }}">
+                                           data-rank="{{ $rank === false ? '' : $rank + 1 }}" data-title="{{ $entry->title }}" aria-label="Vote for {{ $entry->title }}">
                                     <span class="poll-button">Vote</span>
                                 </label>
                             </div>
@@ -66,6 +67,7 @@
                 <footer class="poll-tray">
                     <div>
                         <p id="poll-count" aria-live="polite">Choose {{ $minVotes }} to {{ $maxVotes }} organizations.</p>
+                        <ol class="poll-ranked-choices" id="poll-ranked-choices" aria-label="Your ranked choices" hidden></ol>
                         <p class="poll-tray-hint">Your first selection is your first choice.</p>
                     </div>
                     <button class="poll-button" id="poll-submit" type="submit">Submit Votes</button>
