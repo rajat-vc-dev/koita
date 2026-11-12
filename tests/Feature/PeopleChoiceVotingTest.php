@@ -211,6 +211,7 @@ class PeopleChoiceVotingTest extends TestCase
                 'name' => 'Voter',
                 'email' => 'voter'.$index.'@example.org',
                 'ballot_submitted_at' => $index < 2 ? now() : null,
+                'marketing_consented_at' => $index === 0 ? now() : null,
             ]);
 
             foreach ($choices as $rank => $entry) {
@@ -230,8 +231,15 @@ class PeopleChoiceVotingTest extends TestCase
         $response = $this->actingAs(User::factory()->superAdmin()->create())->get($url)
             ->assertOk()
             ->assertSee('2 submitted ballots')
+            ->assertSee('voter0@example.org')
+            ->assertSee('voter1@example.org')
+            ->assertDontSee('voter2@example.org')
+            ->assertSee('Checked')
+            ->assertSee('Unchecked')
             ->assertSeeInOrder([$first->title, $third->title, $second->title, $fourth->title, $unvoted->title]);
         $results = $response->viewData('results');
+        $choices = $response->viewData('rankedChoices')->get($response->viewData('ballots')->first()->id);
+        $this->assertSame([$third->title, $second->title, $first->title, $fourth->title], $choices->pluck('profile_title')->all());
 
         $this->assertSame([8, 8, 8, 4, 0], array_column($results, 'score'));
         $this->assertSame([1, 1, 3, 4, 5], array_column($results, 'rank'));

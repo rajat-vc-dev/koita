@@ -42,4 +42,44 @@
             </div>
         </div>
     </div>
-@endsection
+
+    <section class="card mt-4 mb-4" id="submitted-ballots" aria-labelledby="submitted-ballots-title">
+        <div class="card-body">
+            <h4 id="submitted-ballots-title" class="mb-3">Submitted ballots</h4>
+            <div class="table-responsive">
+                <table class="table table-striped mb-0">
+                    <thead>
+                        <tr>
+                            <th scope="col">Voter name</th>
+                            <th scope="col">Email</th>
+                            <th scope="col">Marketing checkbox</th>
+                            <th scope="col">Ranked choices</th>
+                            <th scope="col">Submitted at</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @forelse ($ballots as $ballot)
+                            <tr>
+                                <th scope="row">{{ $ballot->name }}</th>
+                                <td>{{ $ballot->email }}</td>
+                                <td>{{ $ballot->marketing_consented_at ? 'Checked' : 'Unchecked' }}</td>
+                                <td>
+                                    <ol class="mb-0 pl-3">
+                                        @foreach ($rankedChoices->get($ballot->id, []) as $choice)
+                                            <li value="{{ $choice->rank }}">{{ $choice->profile_title }}</li>
+                                        @endforeach
+                                    </ol>
+                                </td>
+                                <td class="text-nowrap">{{ $ballot->ballot_submitted_at->format('j M Y, g:i a T') }}</td>
+                            </tr>
+                        @empty
+                            <tr><td colspan="5" class="text-center text-muted">No submitted ballots yet.</td></tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
+            @if ($ballots->hasPages())
+                <div class="mt-3">{{ $ballots->links('pagination::bootstrap-4') }}</div>
+            @endif
+        </div>
+    </section>@endsection

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\PeopleChoiceVoter;
 use App\Models\ShortlistEntry;
 use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
@@ -61,8 +62,19 @@ class ScoreboardController extends Controller
         }
         unset($result);
 
-        $ballotCount = DB::table('people_choice_voters')->whereNotNull('ballot_submitted_at')->count();
+        $ballots = PeopleChoiceVoter::query()
+            ->whereNotNull('ballot_submitted_at')
+            ->latest('ballot_submitted_at')
+            ->latest('id')
+            ->paginate(25, ['id', 'name', 'email', 'marketing_consented_at', 'ballot_submitted_at'], 'ballots_page')
+            ->fragment('submitted-ballots');
+        $ballotCount = $ballots->total();
+        $rankedChoices = DB::table('people_choice_votes')
+            ->whereIn('voter_id', $ballots->getCollection()->modelKeys())
+            ->orderBy('rank')
+            ->get(['voter_id', 'rank', 'profile_title'])
+            ->groupBy('voter_id');
 
-        return view('admin.scoreboard', compact('results', 'weights', 'ballotCount'));
+        return view('admin.scoreboard', compact('results', 'weights', 'ballotCount', 'ballots', 'rankedChoices'));
     }
 }
