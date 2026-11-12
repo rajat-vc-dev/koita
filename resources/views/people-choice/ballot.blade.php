@@ -4,14 +4,14 @@
 
 @section('poll_content')
     <main class="poll-shell">
-        <header class="poll-heading">
+        <div class="poll-heading">
             <h1>People’s Choice Awards</h1>
             @if ($entries->count() >= $minVotes)
                 <p>Vote for {{ $minVotes }} to {{ $maxVotes }} shortlisted organizations in order of preference.</p>
             @else
                 <p>Voting will be available once at least {{ $minVotes }} organizations are on the ballot.</p>
             @endif
-        </header>
+        </div>
 
         @if ($errors->any())
             <div class="poll-error poll-notice" role="alert">{{ $errors->first() }}</div>

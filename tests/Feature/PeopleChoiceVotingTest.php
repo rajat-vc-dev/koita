@@ -148,7 +148,9 @@ class PeopleChoiceVotingTest extends TestCase
         $this->withSession(['people_choice.voter_id' => $voter->id])
             ->get('/peoples-choice-awards-demo/')
             ->assertOk()
-            ->assertSee('class="nav solid"', false)
+            ->assertSee('id="navlinks"', false)
+            ->assertSee(rtrim(route('home'), '/').'/#categories', false)
+            ->assertSee('js/site-navigation.js', false)
             ->assertSee('class="site"', false)
             ->assertSeeInOrder([$first->title, $third->title, $second->title]);
     }
