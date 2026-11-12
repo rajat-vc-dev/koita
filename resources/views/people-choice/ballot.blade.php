@@ -1,12 +1,10 @@
 @extends('people-choice.layout')
 
 @section('title', 'People’s Choice Awards')
-@section('body_class', 'poll-ballot')
 
-@section('content')
+@section('poll_content')
     <main class="poll-shell">
         <header class="poll-heading">
-            <img src="{{ asset('assets/koita/kcadt-ai-awards-logo.webp') }}" alt="ILSS–KCADT AI Awards">
             <h1>People’s Choice Awards</h1>
             @if ($entries->count() >= $minVotes)
                 <p>Vote for {{ $minVotes }} to {{ $maxVotes }} shortlisted organizations in order of preference.</p>

@@ -6,6 +6,7 @@ use App\Mail\PeopleChoiceOtp;
 use App\Models\Applicant;
 use App\Models\PeopleChoiceVoter;
 use App\Models\ShortlistEntry;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -104,6 +105,33 @@ class PeopleChoiceVotingTest extends TestCase
         $this->get(route('people-choice.show'))->assertNotFound();
         $this->post(route('people-choice.register'))->assertNotFound();
         $this->post(route('people-choice.vote'))->assertNotFound();
+    }
+
+    public function test_admin_display_order_is_used_on_the_demo_ballot(): void
+    {
+        config(['koita.shortlist_enabled' => true]);
+        $first = $this->entry('Alpha applicant');
+        $second = $this->entry('Bravo applicant');
+        $third = $this->entry('Charlie applicant');
+
+        $this->actingAs(User::factory()->superAdmin()->create())
+            ->patch(route('admin.shortlist.move', $third), ['direction' => 'up'])
+            ->assertRedirect(route('admin.shortlist.index'));
+        $this->get(route('admin.shortlist.index'))->assertSeeInOrder([$first->title, $third->title, $second->title]);
+
+        $voter = PeopleChoiceVoter::query()->create([
+            'name' => 'Demo voter',
+            'email' => 'demo@example.org',
+            'verified_at' => now(),
+        ]);
+
+        $this->get('/peoples-choice-awards/')->assertNotFound();
+        $this->withSession(['people_choice.voter_id' => $voter->id])
+            ->get('/peoples-choice-awards-demo/')
+            ->assertOk()
+            ->assertSee('class="nav solid"', false)
+            ->assertSee('class="site"', false)
+            ->assertSeeInOrder([$first->title, $third->title, $second->title]);
     }
 
     private function entry(string $title, bool $enabled = true, string $status = Applicant::STATUS_SUBMITTED): ShortlistEntry

@@ -18,7 +18,7 @@ class ShortlistController extends Controller
 {
     public function index(): View
     {
-        $entries = ShortlistEntry::query()->with('applicant:id,organisation_name')->latest('id')->get();
+        $entries = ShortlistEntry::query()->with('applicant:id,organisation_name')->inDisplayOrder()->get();
         $applicants = Applicant::query()
             ->where('application_status', Applicant::STATUS_SUBMITTED)
             ->whereNotIn('id', ShortlistEntry::query()->select('applicant_id'))
@@ -110,6 +110,39 @@ class ShortlistController extends Controller
 
         return redirect()->route('admin.shortlist.index', ['edit' => $entry->id])
             ->with('status', 'Shortlist profile saved.');
+    }
+
+    public function move(Request $request, ShortlistEntry $entry): RedirectResponse
+    {
+        $data = $request->validate(['direction' => ['required', 'in:up,down']]);
+
+        $moved = DB::transaction(function () use ($entry, $data): bool {
+            $entries = ShortlistEntry::query()->inDisplayOrder()->lockForUpdate()->get();
+            $index = $entries->search(fn (ShortlistEntry $candidate) => $candidate->is($entry));
+            abort_if($index === false, 404);
+
+            $target = $index + ($data['direction'] === 'up' ? -1 : 1);
+
+            if (! $entries->has($target)) {
+                return false;
+            }
+
+            $profile = $entries[$index];
+            $entries[$index] = $entries[$target];
+            $entries[$target] = $profile;
+
+            foreach ($entries as $position => $profile) {
+                $profile->display_order = $position + 1;
+                $profile->save();
+            }
+
+            return true;
+        }, attempts: 3);
+
+        return to_route('admin.shortlist.index')->with(
+            'status',
+            $moved ? 'Shortlist display order saved.' : 'The entry is already at the end of the list in that direction.',
+        );
     }
 
     public function status(Request $request, ShortlistEntry $entry): RedirectResponse

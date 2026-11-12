@@ -37,7 +37,7 @@ class PeopleChoiceController extends Controller
             }
 
             return $this->page('ballot', [
-                'entries' => $this->eligibleEntries()->orderBy('title')->orderBy('id')->get(),
+                'entries' => $this->eligibleEntries()->inDisplayOrder()->get(),
                 'minVotes' => self::MIN_VOTES,
                 'maxVotes' => self::MAX_VOTES,
             ]);

@@ -39,7 +39,7 @@
                             <img src="{{ route('admin.shortlist.logo', $entry) }}" alt="" width="64" class="mr-3">
                         @endif
                         <div>
-                            <h5>{{ $entry->title }}</h5>
+                            <h5>{{ $loop->iteration }}. {{ $entry->title }}</h5>
                             <div class="text-muted">{{ $entry->applicant->organisation_name }}</div>
                             <span class="badge {{ $entry->is_enabled ? 'badge-success' : 'badge-secondary' }}">
                                 {{ $entry->is_enabled ? 'Enabled' : 'Disabled' }}
@@ -47,6 +47,14 @@
                         </div>
                     </div>
                     <div class="d-flex flex-wrap align-items-center">
+                        <form method="POST" action="{{ route('admin.shortlist.move', $entry) }}" class="mr-2 mb-2">
+                            @csrf
+                            @method('PATCH')
+                            <button class="btn btn-sm btn-outline-secondary" type="submit" name="direction" value="up"
+                                    aria-label="Move {{ $entry->title }} up" @disabled($loop->first)>Move up</button>
+                            <button class="btn btn-sm btn-outline-secondary" type="submit" name="direction" value="down"
+                                    aria-label="Move {{ $entry->title }} down" @disabled($loop->last)>Move down</button>
+                        </form>
                         <a class="btn btn-sm btn-primary mr-2 mb-2" href="{{ route('admin.shortlist.index', ['edit' => $entry->id]) }}#entry-{{ $entry->id }}">Edit</a>
                         <form method="POST" action="{{ route('admin.shortlist.status', $entry) }}" class="mr-2 mb-2">
                             @csrf

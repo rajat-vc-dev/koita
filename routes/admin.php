@@ -19,6 +19,7 @@ Route::middleware(['auth', 'superadmin'])->group(function () {
         Route::post('shortlist', [ShortlistController::class, 'store'])->name('shortlist.store');
         Route::put('shortlist/{entry}', [ShortlistController::class, 'update'])->name('shortlist.update');
         Route::patch('shortlist/{entry}/status', [ShortlistController::class, 'status'])->name('shortlist.status');
+        Route::patch('shortlist/{entry}/move', [ShortlistController::class, 'move'])->name('shortlist.move');
         Route::delete('shortlist/{entry}', [ShortlistController::class, 'destroy'])->name('shortlist.destroy');
         Route::get('shortlist/{entry}/logo', [ShortlistController::class, 'logo'])->name('shortlist.logo');
     });
