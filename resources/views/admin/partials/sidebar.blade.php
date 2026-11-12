@@ -22,6 +22,14 @@
                             <span>Registrations</span>
                         </a>
                     </li>
+                    @if (config('koita.shortlist_enabled'))
+                        <li class="{{ request()->routeIs('admin.shortlist.*') ? 'active' : '' }}">
+                            <a href="{{ route('admin.shortlist.index') }}">
+                                <i class="ti-list"></i>
+                                <span>Shortlist</span>
+                            </a>
+                        </li>
+                    @endif
                     <li class="{{ request()->routeIs('admin.email-templates.*') ? 'active' : '' }}">
                         <a href="{{ route('admin.email-templates.index') }}">
                             <i class="ti-email"></i>

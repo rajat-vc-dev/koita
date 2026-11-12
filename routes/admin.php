@@ -6,11 +6,22 @@ use App\Http\Controllers\Admin\Auth\LoginController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\EmailTemplateController;
 use App\Http\Controllers\Admin\PageTemplateController;
+use App\Http\Controllers\Admin\ShortlistController;
+use App\Http\Middleware\EnsureShortlistEnabled;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware(['auth', 'superadmin'])->group(function () {
     Route::get('/', DashboardController::class)->name('dashboard');
     Route::post('logout', [LoginController::class, 'destroy'])->name('logout');
+
+    Route::middleware(EnsureShortlistEnabled::class)->group(function () {
+        Route::get('shortlist', [ShortlistController::class, 'index'])->name('shortlist.index');
+        Route::post('shortlist', [ShortlistController::class, 'store'])->name('shortlist.store');
+        Route::put('shortlist/{entry}', [ShortlistController::class, 'update'])->name('shortlist.update');
+        Route::patch('shortlist/{entry}/status', [ShortlistController::class, 'status'])->name('shortlist.status');
+        Route::delete('shortlist/{entry}', [ShortlistController::class, 'destroy'])->name('shortlist.destroy');
+        Route::get('shortlist/{entry}/logo', [ShortlistController::class, 'logo'])->name('shortlist.logo');
+    });
 
     Route::get('email-templates', [EmailTemplateController::class, 'index'])->name('email-templates.index');
     Route::get('email-templates/{emailTemplate}/edit', [EmailTemplateController::class, 'edit'])->name('email-templates.edit');

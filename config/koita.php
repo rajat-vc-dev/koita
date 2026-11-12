@@ -1,6 +1,7 @@
 <?php
 
 return [
+    'shortlist_enabled' => env('SHORTLIST_ENABLED', false),
     'admin_email' => env('ADMIN_EMAIL', 'admin@koita.test'),
     'access_code_prefix' => env('ACCESS_CODE_PREFIX', 'KF-'),
     'access_code_length' => (int) env('ACCESS_CODE_LENGTH', 10),
