@@ -30,6 +30,12 @@
                             </a>
                         </li>
                     @endif
+                    <li class="{{ request()->routeIs('admin.scoreboard') ? 'active' : '' }}">
+                        <a href="{{ route('admin.scoreboard') }}">
+                            <i class="ti-bar-chart"></i>
+                            <span>Scoreboard</span>
+                        </a>
+                    </li>
                     <li class="{{ request()->routeIs('admin.email-templates.*') ? 'active' : '' }}">
                         <a href="{{ route('admin.email-templates.index') }}">
                             <i class="ti-email"></i>

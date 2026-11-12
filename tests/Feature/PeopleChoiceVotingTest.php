@@ -153,6 +153,52 @@ class PeopleChoiceVotingTest extends TestCase
             ->assertSeeInOrder([$first->title, $third->title, $second->title]);
     }
 
+    public function test_scoreboard_totals_submitted_choices_and_breaks_score_ties_by_rank(): void
+    {
+        $first = $this->entry('First organization');
+        $second = $this->entry('Second organization');
+        $third = $this->entry('Third organization');
+        $fourth = $this->entry('Fourth organization');
+        $unvoted = $this->entry('Unvoted organization');
+        $ballots = [
+            [$first, $second, $third, $fourth],
+            [$third, $second, $first, $fourth],
+            [$unvoted, $first, $second],
+        ];
+
+        foreach ($ballots as $index => $choices) {
+            $voter = PeopleChoiceVoter::query()->create([
+                'name' => 'Voter',
+                'email' => 'voter'.$index.'@example.org',
+                'ballot_submitted_at' => $index < 2 ? now() : null,
+            ]);
+
+            foreach ($choices as $rank => $entry) {
+                DB::table('people_choice_votes')->insert([
+                    'voter_id' => $voter->id,
+                    'applicant_id' => $entry->applicant_id,
+                    'profile_title' => $entry->title,
+                    'rank' => $rank + 1,
+                ]);
+            }
+        }
+
+        $fourth->delete();
+        $url = route('admin.scoreboard');
+        $this->get($url)->assertNotFound();
+
+        $response = $this->actingAs(User::factory()->superAdmin()->create())->get($url)
+            ->assertOk()
+            ->assertSee('2 submitted ballots')
+            ->assertSeeInOrder([$first->title, $third->title, $second->title, $fourth->title, $unvoted->title]);
+        $results = $response->viewData('results');
+
+        $this->assertSame([8, 8, 8, 4, 0], array_column($results, 'score'));
+        $this->assertSame([1, 1, 3, 4, 5], array_column($results, 'rank'));
+        $this->assertSame([1 => 1, 2 => 0, 3 => 1, 4 => 0, 5 => 0], $results[0]['counts']);
+        $this->assertSame([1 => 0, 2 => 2, 3 => 0, 4 => 0, 5 => 0], $results[2]['counts']);
+    }
+
     private function entry(string $title, bool $enabled = true, string $status = Applicant::STATUS_SUBMITTED): ShortlistEntry
     {
         $applicant = Applicant::query()->create([

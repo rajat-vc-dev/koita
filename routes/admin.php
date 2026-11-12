@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\Auth\LoginController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\EmailTemplateController;
 use App\Http\Controllers\Admin\PageTemplateController;
+use App\Http\Controllers\Admin\ScoreboardController;
 use App\Http\Controllers\Admin\ShortlistController;
 use App\Http\Middleware\EnsureShortlistEnabled;
 use Illuminate\Support\Facades\Route;
@@ -13,6 +14,8 @@ use Illuminate\Support\Facades\Route;
 Route::middleware(['auth', 'superadmin'])->group(function () {
     Route::get('/', DashboardController::class)->name('dashboard');
     Route::post('logout', [LoginController::class, 'destroy'])->name('logout');
+
+    Route::get('scoreboard', ScoreboardController::class)->name('scoreboard');
 
     Route::middleware(EnsureShortlistEnabled::class)->group(function () {
         Route::get('shortlist', [ShortlistController::class, 'index'])->name('shortlist.index');
