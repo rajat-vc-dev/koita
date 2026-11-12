@@ -1,6 +1,7 @@
 <?php
 
 return [
+    'people_choice_voting_enabled' => env('PEOPLE_CHOICE_VOTING_ENABLED', false),
     'shortlist_enabled' => env('SHORTLIST_ENABLED', false),
     'admin_email' => env('ADMIN_EMAIL', 'admin@koita.test'),
     'access_code_prefix' => env('ACCESS_CODE_PREFIX', 'KF-'),

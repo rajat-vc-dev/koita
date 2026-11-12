@@ -4,7 +4,9 @@ use App\Http\Controllers\Apply\ApplicationController;
 use App\Http\Controllers\Apply\GateController;
 use App\Http\Controllers\DocumentResubmitController;
 use App\Http\Controllers\InterestRegistrationController;
+use App\Http\Controllers\PeopleChoiceController;
 use App\Http\Controllers\ThanksController;
+use App\Http\Middleware\EnsurePeopleChoiceVotingEnabled;
 use Illuminate\Support\Facades\Route;
 
 Route::view('/', 'home')->name('home');
@@ -41,3 +43,14 @@ Route::post('/documents/resubmit/{token}', [DocumentResubmitController::class, '
     ->name('documents.resubmit.update');
 
 Route::get('/thanks', ThanksController::class)->name('thanks');
+
+Route::prefix('peoples-choice-awards')->name('people-choice.')
+    ->middleware(EnsurePeopleChoiceVotingEnabled::class)
+    ->group(function () {
+        Route::get('/', [PeopleChoiceController::class, 'show'])->name('show');
+        Route::post('/register', [PeopleChoiceController::class, 'register'])->middleware('throttle:8,1')->name('register');
+        Route::post('/verify', [PeopleChoiceController::class, 'verify'])->middleware('throttle:12,1')->name('verify');
+        Route::post('/back', [PeopleChoiceController::class, 'back'])->name('back');
+        Route::post('/vote', [PeopleChoiceController::class, 'vote'])->middleware('throttle:10,1')->name('vote');
+        Route::get('/logos/{entry}', [PeopleChoiceController::class, 'logo'])->whereNumber('entry')->name('logo');
+    });
