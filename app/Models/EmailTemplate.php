@@ -30,6 +30,8 @@ class EmailTemplate extends Model
 
     public const USER_APPLICATION_REJECTED = 'user_application_rejected';
 
+    public const USER_PEOPLE_CHOICE_OTP = 'user_people_choice_otp';
+
     /**
      * Replace {{placeholders}} in subject/body.
      *

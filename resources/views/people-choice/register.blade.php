@@ -30,10 +30,10 @@
                     @error('email') <p class="poll-error" role="alert">{{ $message }}</p> @enderror
                 </div>
 
-                @if (config('koita.recaptcha.site_key'))
-                    <div class="g-recaptcha" data-sitekey="{{ config('koita.recaptcha.site_key') }}"></div>
+                @include('partials.recaptcha')
+                @if (! config('koita.recaptcha.site_key'))
+                    @error('g-recaptcha-response') <p class="poll-error" role="alert">{{ $message }}</p> @enderror
                 @endif
-                @error('g-recaptcha-response') <p class="poll-error" role="alert">{{ $message }}</p> @enderror
 
                 <p class="poll-hint">We use your name and email to verify and record your ballot.</p>
                 <label class="poll-consent">

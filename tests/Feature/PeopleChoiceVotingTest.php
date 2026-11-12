@@ -2,7 +2,7 @@
 
 namespace Tests\Feature;
 
-use App\Mail\PeopleChoiceOtp;
+use App\Mail\TemplatedMail;
 use App\Models\Applicant;
 use App\Models\PeopleChoiceVoter;
 use App\Models\ShortlistEntry;
@@ -45,7 +45,7 @@ class PeopleChoiceVotingTest extends TestCase
         ])->assertRedirect($page);
         $this->get($page)->assertOk()->assertSee('Verify your email')->assertDontSee('Resend');
 
-        $mail = Mail::sent(PeopleChoiceOtp::class)->sole();
+        $mail = Mail::sent(TemplatedMail::class)->sole();
         $this->assertTrue($mail->hasTo('voter@example.org'));
         $this->assertSame(1, preg_match('/\b([0-9]{6})\b/', $mail->render(), $match));
         $code = $match[1];
@@ -85,12 +85,31 @@ class PeopleChoiceVotingTest extends TestCase
         $this->assertDatabaseCount('people_choice_votes', 3);
     }
 
+    public function test_registration_uses_the_configured_captcha_widget_and_requires_a_response(): void
+    {
+        Mail::fake();
+        config([
+            'koita.recaptcha.site_key' => 'shared-site-key',
+            'koita.recaptcha.secret_key' => 'shared-secret',
+        ]);
+        $page = route('people-choice.show');
+
+        $this->get($page)->assertOk()->assertSee('data-sitekey="shared-site-key"', false);
+        $this->from($page)->post(route('people-choice.register'), [
+            'name' => 'Voter',
+            'email' => 'voter@example.org',
+        ])->assertSessionHasErrors('g-recaptcha-response');
+
+        $this->assertDatabaseCount('people_choice_voters', 0);
+        Mail::assertNothingSent();
+    }
+
     public function test_an_expired_code_cannot_verify_a_voter(): void
     {
         Mail::fake();
         $page = route('people-choice.show');
         $this->post(route('people-choice.register'), ['name' => 'Voter', 'email' => 'voter@example.org']);
-        preg_match('/\b([0-9]{6})\b/', Mail::sent(PeopleChoiceOtp::class)->sole()->render(), $match);
+        preg_match('/\b([0-9]{6})\b/', Mail::sent(TemplatedMail::class)->sole()->render(), $match);
 
         $this->travel(11)->minutes();
 

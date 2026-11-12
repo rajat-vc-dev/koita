@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Mail\PeopleChoiceOtp;
+use App\Mail\TemplatedMail;
 use App\Models\Applicant;
+use App\Models\EmailTemplate;
 use App\Models\PeopleChoiceVoter;
 use App\Models\ShortlistEntry;
 use App\Rules\RecaptchaV2;
@@ -65,7 +66,17 @@ class PeopleChoiceController extends Controller
             'email' => ['required', 'email:rfc', 'max:255'],
             'marketing_consent' => ['nullable', 'boolean'],
             'g-recaptcha-response' => [$captchaRequired ? 'required' : 'nullable', 'string', new RecaptchaV2],
+        ], [
+            'g-recaptcha-response.required' => 'Please complete the reCAPTCHA verification.',
         ]);
+
+        $template = EmailTemplate::query()->where('key', EmailTemplate::USER_PEOPLE_CHOICE_OTP)->first();
+
+        if (! $template) {
+            throw ValidationException::withMessages([
+                'email' => 'Email verification is temporarily unavailable. Please try again later.',
+            ]);
+        }
 
         $email = Str::lower($data['email']);
         $rateKey = 'people-choice-otp:'.hash('sha256', $email);
@@ -92,7 +103,7 @@ class PeopleChoiceController extends Controller
         ]);
 
         try {
-            Mail::to($voter->email)->send(new PeopleChoiceOtp($code));
+            Mail::to($voter->email)->send(new TemplatedMail($template, ['otp_code' => $code]));
         } catch (Throwable $exception) {
             report($exception);
             PeopleChoiceVoter::query()->whereKey($voter->id)->where('otp_challenge', $challenge)
