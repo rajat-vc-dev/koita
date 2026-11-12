@@ -32,6 +32,10 @@ class EmailTemplate extends Model
 
     public const USER_PEOPLE_CHOICE_OTP = 'user_people_choice_otp';
 
+    public const USER_PEOPLE_CHOICE_CONFIRMATION = 'user_people_choice_confirmation';
+
+    public const ADMIN_PEOPLE_CHOICE_BALLOT = 'admin_people_choice_ballot';
+
     /**
      * Replace {{placeholders}} in subject/body.
      *

@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Mail\TemplatedMail;
 use App\Models\Applicant;
+use App\Models\EmailTemplate;
 use App\Models\PeopleChoiceVoter;
 use App\Models\ShortlistEntry;
 use App\Models\User;
@@ -77,9 +78,28 @@ class PeopleChoiceVotingTest extends TestCase
             [$third->applicant_id, $first->applicant_id, $second->applicant_id],
             DB::table('people_choice_votes')->orderBy('rank')->pluck('applicant_id')->all(),
         );
-        $this->get($page)->assertOk()->assertSee('Thank you for voting!');
+        $this->get($page)->assertOk()
+            ->assertSee('Thank you for voting!')
+            ->assertSee('A confirmation email was sent to')
+            ->assertSeeInOrder([$third->title, $first->title, $second->title]);
+
+        $confirmation = Mail::sent(TemplatedMail::class, fn (TemplatedMail $mail) => $mail->template->key === EmailTemplate::USER_PEOPLE_CHOICE_CONFIRMATION)->sole();
+        $notification = Mail::sent(TemplatedMail::class, fn (TemplatedMail $mail) => $mail->template->key === EmailTemplate::ADMIN_PEOPLE_CHOICE_BALLOT)->sole();
+        $this->assertTrue($confirmation->hasTo('voter@example.org'));
+        $this->assertTrue($notification->hasTo(config('koita.admin_email')));
+        $choices = "1st choice: Third applicant\n2nd choice: First applicant\n3rd choice: Second applicant";
+        $this->assertSame($choices, $confirmation->data['ranked_choices']);
+        $this->assertSame($choices, $notification->data['ranked_choices']);
+
+        $this->flushSession();
+        $this->post(route('people-choice.register'), ['name' => 'Test Voter', 'email' => 'VOTER@example.org'])->assertRedirect($page);
+        $otp = Mail::sent(TemplatedMail::class, fn (TemplatedMail $mail) => $mail->template->key === EmailTemplate::USER_PEOPLE_CHOICE_OTP)->last();
+        $this->post(route('people-choice.verify'), ['code' => $otp->data['otp_code']])->assertRedirect($page);
+        $this->get($page)->assertOk()->assertSee('You’ve already voted')->assertDontSee('Submit Votes');
+        $this->assertDatabaseCount('people_choice_voters', 1);
         $this->post($submit, ['choices' => [$first->id, $second->id, $third->id]])->assertRedirect($page);
         $this->assertDatabaseCount('people_choice_votes', 3);
+        Mail::assertSent(TemplatedMail::class, 4);
 
         $first->delete();
         $this->assertDatabaseCount('people_choice_votes', 3);
@@ -102,6 +122,24 @@ class PeopleChoiceVotingTest extends TestCase
 
         $this->assertDatabaseCount('people_choice_voters', 0);
         Mail::assertNothingSent();
+    }
+
+    public function test_verified_voter_can_log_in_again_before_submitting(): void
+    {
+        Mail::fake();
+        $page = route('people-choice.show');
+        $registration = ['name' => 'Voter', 'email' => 'voter@example.org'];
+
+        for ($attempt = 0; $attempt < 2; $attempt++) {
+            $this->flushSession();
+            $this->post(route('people-choice.register'), $registration)->assertRedirect($page);
+            $otp = Mail::sent(TemplatedMail::class)->last();
+            $this->post(route('people-choice.verify'), ['code' => $otp->data['otp_code']])->assertRedirect($page);
+            $this->get($page)->assertOk()->assertSee('id="poll-ballot"', false)->assertDontSee('You’ve already voted');
+        }
+
+        $this->assertDatabaseCount('people_choice_voters', 1);
+        $this->assertNull(PeopleChoiceVoter::query()->sole()->ballot_submitted_at);
     }
 
     public function test_an_expired_code_cannot_verify_a_voter(): void

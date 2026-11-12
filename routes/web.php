@@ -48,9 +48,9 @@ Route::prefix('peoples-choice-awards-demo')->name('people-choice.')
     ->middleware(EnsurePeopleChoiceVotingEnabled::class)
     ->group(function () {
         Route::get('/', [PeopleChoiceController::class, 'show'])->name('show');
-        Route::post('/register', [PeopleChoiceController::class, 'register'])->middleware('throttle:8,1')->name('register');
-        Route::post('/verify', [PeopleChoiceController::class, 'verify'])->middleware('throttle:12,1')->name('verify');
+        Route::post('/register', [PeopleChoiceController::class, 'register'])->middleware('throttle:8,1,people-choice-register')->name('register');
+        Route::post('/verify', [PeopleChoiceController::class, 'verify'])->middleware('throttle:12,1,people-choice-verify')->name('verify');
         Route::post('/back', [PeopleChoiceController::class, 'back'])->name('back');
-        Route::post('/vote', [PeopleChoiceController::class, 'vote'])->middleware('throttle:10,1')->name('vote');
+        Route::post('/vote', [PeopleChoiceController::class, 'vote'])->middleware('throttle:10,1,people-choice-vote')->name('vote');
         Route::get('/logos/{entry}', [PeopleChoiceController::class, 'logo'])->whereNumber('entry')->name('logo');
     });

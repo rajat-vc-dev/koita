@@ -233,3 +233,42 @@
     .poll-tray > div { width: 100%; }
     #poll-submit { margin-left: auto; }
 }
+
+.poll-receipt {
+    background: #fbfafb;
+    text-align: center;
+}
+
+.poll-receipt .poll-panel { width: min(100%, 700px); }
+
+.poll-receipt-check {
+    display: grid;
+    width: 74px;
+    height: 74px;
+    margin: 0 auto 24px;
+    place-items: center;
+    border-radius: 50%;
+    background: var(--poll-gold);
+    color: #fff;
+    font-size: 2rem;
+}
+
+.poll-receipt-choices {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.poll-receipt-choices li {
+    padding: 5px 15px;
+    border-radius: 24px;
+    background: #f6f1e4;
+    font-weight: 750;
+    overflow-wrap: anywhere;
+}
+
+.poll-receipt-choices span { margin-right: 4px; color: var(--poll-gold); }

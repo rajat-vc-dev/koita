@@ -30,11 +30,21 @@ class PeopleChoiceController extends Controller
 
     private const OTP_ATTEMPTS = 5;
 
+    private const ORDINALS = [1 => '1st', 2 => '2nd', 3 => '3rd', 4 => '4th', 5 => '5th'];
+
     public function show(Request $request): Response
     {
         if ($voter = $this->verifiedVoter($request)) {
             if ($voter->ballot_submitted_at) {
-                return $this->page('submitted');
+                $receipt = $request->session()->get('people_choice.receipt');
+
+                return $this->page('submitted', [
+                    'voter' => $voter,
+                    'choices' => DB::table('people_choice_votes')->where('voter_id', $voter->id)->orderBy('rank')->get(),
+                    'ordinals' => self::ORDINALS,
+                    'justSubmitted' => $receipt !== null,
+                    'confirmationSent' => $receipt['confirmation_sent'] ?? false,
+                ]);
             }
 
             return $this->page('ballot', [
@@ -196,11 +206,11 @@ class PeopleChoiceController extends Controller
             'choices.*' => ['required', 'integer', 'distinct', 'min:1'],
         ]);
 
-        DB::transaction(function () use ($voter, $data): void {
+        $ballot = DB::transaction(function () use ($voter, $data): ?array {
             $voter = PeopleChoiceVoter::query()->lockForUpdate()->findOrFail($voter->id);
 
             if ($voter->ballot_submitted_at) {
-                return;
+                return null;
             }
 
             $entries = $this->eligibleEntries()->whereKey($data['choices'])->orderBy('id')->lockForUpdate()->get()->keyBy('id');
@@ -225,9 +235,54 @@ class PeopleChoiceController extends Controller
 
             DB::table('people_choice_votes')->insert($votes);
             $voter->update(['ballot_submitted_at' => now()]);
+
+            return [$voter, $votes];
         }, attempts: 3);
 
+        if ($ballot !== null) {
+            [$submittedVoter, $votes] = $ballot;
+            $request->session()->flash('people_choice.receipt', [
+                'confirmation_sent' => $this->sendBallotNotifications($submittedVoter, $votes),
+            ]);
+        }
+
         return to_route('people-choice.show');
+    }
+
+    private function sendBallotNotifications(PeopleChoiceVoter $voter, array $votes): bool
+    {
+        $choices = collect($votes)->map(
+            fn (array $vote): string => self::ORDINALS[$vote['rank']].' choice: '.$vote['profile_title'],
+        )->implode("\n");
+        $marketingConsent = $voter->marketing_consented_at !== null;
+        $data = [
+            'voter_name' => $voter->name,
+            'email' => $voter->email,
+            'submitted_at' => $voter->ballot_submitted_at->format('j M Y, g:i a T'),
+            'marketing_consent' => $marketingConsent ? 'Yes' : 'No',
+            'exclude_from_marketing' => $marketingConsent ? 'No' : 'Yes',
+            'ranked_choices' => $choices,
+            'scoreboard_url' => route('admin.scoreboard'),
+        ];
+        $recipients = [
+            EmailTemplate::USER_PEOPLE_CHOICE_CONFIRMATION => $voter->email,
+            EmailTemplate::ADMIN_PEOPLE_CHOICE_BALLOT => config('koita.admin_email'),
+        ];
+        $confirmationSent = false;
+
+        foreach ($recipients as $key => $recipient) {
+            try {
+                $template = EmailTemplate::query()->where('key', $key)->firstOrFail();
+                Mail::to($recipient)->send(new TemplatedMail($template, $data));
+                if ($key === EmailTemplate::USER_PEOPLE_CHOICE_CONFIRMATION) {
+                    $confirmationSent = true;
+                }
+            } catch (Throwable $exception) {
+                report($exception);
+            }
+        }
+
+        return $confirmationSent;
     }
 
     public function logo(Request $request, int $entry): StreamedResponse
