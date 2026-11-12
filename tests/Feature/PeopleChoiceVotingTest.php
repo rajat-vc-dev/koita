@@ -195,6 +195,8 @@ class PeopleChoiceVotingTest extends TestCase
 
     public function test_scoreboard_totals_submitted_choices_and_breaks_score_ties_by_rank(): void
     {
+        config(['koita.shortlist_enabled' => true]);
+
         $first = $this->entry('First organization');
         $second = $this->entry('Second organization');
         $third = $this->entry('Third organization');

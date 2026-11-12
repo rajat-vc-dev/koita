@@ -15,9 +15,8 @@ Route::middleware(['auth', 'superadmin'])->group(function () {
     Route::get('/', DashboardController::class)->name('dashboard');
     Route::post('logout', [LoginController::class, 'destroy'])->name('logout');
 
-    Route::get('scoreboard', ScoreboardController::class)->name('scoreboard');
-
     Route::middleware(EnsureShortlistEnabled::class)->group(function () {
+        Route::get('scoreboard', ScoreboardController::class)->name('scoreboard');
         Route::get('shortlist', [ShortlistController::class, 'index'])->name('shortlist.index');
         Route::post('shortlist', [ShortlistController::class, 'store'])->name('shortlist.store');
         Route::put('shortlist/{entry}', [ShortlistController::class, 'update'])->name('shortlist.update');

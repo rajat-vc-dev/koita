@@ -32,7 +32,11 @@ class ShortlistAdminTest extends TestCase
         $this->actingAs(User::factory()->superAdmin()->create());
 
         $indexUrl = route('admin.shortlist.index');
-        $this->get(route('admin.dashboard'))->assertOk()->assertDontSee($indexUrl, false);
+        $scoreboardUrl = route('admin.scoreboard');
+        $this->get(route('admin.dashboard'))->assertOk()
+            ->assertDontSee($indexUrl, false)
+            ->assertDontSee($scoreboardUrl, false);
+        $this->get($scoreboardUrl)->assertNotFound();
         $this->get($indexUrl)->assertNotFound();
         $this->post(route('admin.shortlist.store'))->assertNotFound();
         $this->put(route('admin.shortlist.update', $entry))->assertNotFound();
