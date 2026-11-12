@@ -14,7 +14,7 @@
             <h1>Audience Poll</h1>
             <p class="poll-intro">To participate, please enter your name and email.</p>
 
-            <form method="POST" action="{{ route('people-choice.register') }}">
+            <form id="poll-register" method="POST" action="{{ route('people-choice.register') }}">
                 @csrf
                 <div class="poll-field">
                     <label for="poll-name">Name</label>
@@ -30,7 +30,11 @@
                     @error('email') <p class="poll-error" role="alert">{{ $message }}</p> @enderror
                 </div>
 
-                @include('partials.recaptcha')
+                <div class="poll-field">
+                    <div id="poll-captcha-widget" tabindex="-1">
+                        @include('partials.recaptcha')
+                    </div>
+                </div>
                 @if (! config('koita.recaptcha.site_key'))
                     @error('g-recaptcha-response') <p class="poll-error" role="alert">{{ $message }}</p> @enderror
                 @endif

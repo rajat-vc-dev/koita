@@ -9,7 +9,7 @@
             <p class="poll-notice">A verification code was sent to your email.</p>
             <p class="poll-intro">Enter the six-digit code sent to <strong>{{ $email }}</strong> to continue.</p>
 
-            <form method="POST" action="{{ route('people-choice.verify') }}">
+            <form id="poll-verify" method="POST" action="{{ route('people-choice.verify') }}">
                 @csrf
                 <div class="poll-field">
                     <label for="poll-code">Verification code</label>

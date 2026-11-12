@@ -105,7 +105,3 @@
         @endforeach
     </main>
 @endsection
-
-@push('scripts')
-    <script src="{{ asset('js/people-choice.js') }}" defer></script>
-@endpush
