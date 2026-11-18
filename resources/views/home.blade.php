@@ -10,6 +10,10 @@
 
 @push('styles')
 <link rel="stylesheet" href="{{ asset('css/home.css') }}">
+@isset($shortlistEntries)
+<link rel="stylesheet" href="{{ asset('css/people-choice.css') }}">
+<style>#shortlisted-organizations .poll-shell{padding-top:0} #shortlisted-organizations h2{margin-bottom:24px} #shortlisted-organizations .poll-card h2{margin-bottom:0}</style>
+@endisset
 @endpush
 
 @push('schema')
@@ -179,6 +183,19 @@
   </div>
 </section> -->
 
+
+@isset($shortlistEntries)
+@include('people-choice.card-styles')
+<section class="section poll-page" id="shortlisted-organizations">
+    <main class="poll-shell">
+        <h2>Shortlisted Organizations</h2>
+        <div class="poll-grid">
+            @include('people-choice.cards', ['entries' => $shortlistEntries, 'previousChoices' => [], 'preview' => true])
+        </div>
+        @include('people-choice.profiles', ['entries' => $shortlistEntries, 'preview' => true])
+    </main>
+</section>
+@endisset
 
 <section class="section categories-sec" id="categories">
   <div class="wrap">
@@ -1128,6 +1145,9 @@ label.check {
 <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 @endif
 <script src="{{ asset('js/home.js') }}"></script>
+@isset($shortlistEntries)
+<script src="{{ asset('js/people-choice.js') }}" defer></script>
+@endisset
 <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
 <script>
 $(document).ready(function () {

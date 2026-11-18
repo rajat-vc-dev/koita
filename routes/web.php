@@ -6,10 +6,13 @@ use App\Http\Controllers\DocumentResubmitController;
 use App\Http\Controllers\InterestRegistrationController;
 use App\Http\Controllers\PeopleChoiceController;
 use App\Http\Controllers\ThanksController;
+use App\Http\Controllers\HomeDemoController;
 use App\Http\Middleware\EnsurePeopleChoiceVotingEnabled;
 use Illuminate\Support\Facades\Route;
 
 Route::view('/', 'home')->name('home');
+Route::get('/home-demo', [HomeDemoController::class, 'index'])->name('home-demo');
+Route::get('/home-demo/logos/{entry}', [HomeDemoController::class, 'logo'])->whereNumber('entry')->name('home-demo.logo');
 Route::post('/register-interest', [InterestRegistrationController::class, 'store'])
     ->middleware('throttle:10,1')
     ->name('interest.store');

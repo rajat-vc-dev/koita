@@ -184,7 +184,7 @@ class PeopleChoiceVotingTest extends TestCase
 
         $this->get('/peoples-choice-awards/')->assertNotFound();
         $this->withSession(['people_choice.voter_id' => $voter->id])
-            ->get('/peoples-choice-awards-demo/')
+            ->get('/audience-choice-awards-demo/')
             ->assertOk()
             ->assertSee('id="navlinks"', false)
             ->assertSee(rtrim(route('home'), '/').'/#categories', false)
@@ -247,6 +247,19 @@ class PeopleChoiceVotingTest extends TestCase
         $this->assertSame([1, 1, 3, 4, 5], array_column($results, 'rank'));
         $this->assertSame([1 => 1, 2 => 0, 3 => 1, 4 => 0, 5 => 0], $results[0]['counts']);
         $this->assertSame([1 => 0, 2 => 2, 3 => 0, 4 => 0, 5 => 0], $results[2]['counts']);
+    }
+
+    public function test_home_demo_shows_public_shortlist_before_awards(): void
+    {
+        $entry = $this->entry('Demo shortlist organization');
+        $disabled = $this->entry('Hidden organization', enabled: false);
+
+        $this->get('/home-demo')->assertOk()
+            ->assertSeeInOrder(['Shortlisted Organizations', $entry->title, 'Awards &amp; Recognition'], false)
+            ->assertSee(route('people-choice.show'), false)
+            ->assertSee('profile-'.$entry->id, false)
+            ->assertDontSee($disabled->title);
+        $this->get('/')->assertOk()->assertDontSee($entry->title);
     }
 
     private function entry(string $title, bool $enabled = true, string $status = Applicant::STATUS_SUBMITTED): ShortlistEntry

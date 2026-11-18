@@ -84,6 +84,12 @@ $(function () {
         submitFeedback($verification, 'Verifying…');
     });
 
+    $('[data-dialog]').each(function () {
+        const dialog = document.getElementById(this.dataset.dialog);
+        if (typeof dialog.showModal === 'function') {
+            $(this).prop('hidden', false).on('click', () => dialog.showModal());
+        }
+    });
     const $ballot = $('#poll-ballot');
 
     if (!$ballot.length) {
@@ -188,12 +194,7 @@ $(function () {
         submitFeedback($ballot, 'Submitting votes…');
     });
 
-    $('[data-dialog]').each(function () {
-        const dialog = document.getElementById(this.dataset.dialog);
-        if (typeof dialog.showModal === 'function') {
-            $(this).prop('hidden', false).on('click', () => dialog.showModal());
-        }
-    });
+
 
     renderChoices();
 });
