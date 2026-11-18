@@ -57,7 +57,7 @@ const FAQS = [
       <li>1st Prize – ₹20 Lakhs</li>
       <li>2nd Prize – ₹10 Lakhs</li>
       <li>3rd Prize – ₹5 Lakhs Each (3 category winners)</li>
-      <li>People's Choice – ₹5 Lakhs</li>
+      <li>Audience Choice – ₹5 Lakhs</li>
     </ul>`
   },
   {q:"What recognition will winners receive?", a:"Beyond the cash awards, selected winners will also be profiled and featured at India Fundraising Conference (IFRC) and Digital Toolbook for Social Impact (DT4SI), the sector’s first digital knowledge platform for social impact. This visibility is designed to amplify their work, inspire others, and strengthen the overall AI-for-social-good ecosystem in India."},

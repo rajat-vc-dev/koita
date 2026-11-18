@@ -1,0 +1,1409 @@
+@extends('layouts.site')
+
+@section('title', 'The ILSS-KCADT AI Awards 2026 | AI for Social Impact ')
+@section('description', 'The ILSS–KCADT AI Awards celebrate nonprofits using AI for meaningful social impact. Discover eligibility, prizes, evaluation criteria and key dates. ')
+@section('body_attrs', 'id="top"')
+
+@section('nav')
+@include('partials.nav-home')
+@endsection
+
+@push('styles')
+<link rel="stylesheet" href="{{ asset('css/home.css') }}">
+@endpush
+
+@push('schema')
+    @include('partials.schema-markup')
+@endpush
+
+@section('content')
+<main>
+<!-- ===================== HERO ===================== -->
+<section class="hero">
+  <div class="wrap hero-grid">
+    <div class="hero-copy">
+      <h1 class="reveal d1">The <span>ILSS - KCADT</span> <br>AI AWARDS 2026
+	  </h1>
+      <p class="lede reveal d2">Recognising non-profits and social purpose organisations across India that use AI to tackle real-world challenges and create measurable, inclusive impact.</p>
+      <div class="hero-cta reveal d3">
+        <a href="javascript:void(0);" class="btn btn-gold">Voting Opens Nov 19 <span class="arw">
+  <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+  </svg>
+</span></a>
+        <a href="#winners" class="btn btn-ghost">KF Tech Awards 2025 <span class="arw">
+  <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+  </svg>
+</span></a>
+      </div>
+    </div>
+    <!-- HERO PHOTO — pulled from dt4si.com. Swap the src for the client's own banner image if preferred. -->
+    <div class="hero-trophy">
+	<!-- <p>Presented By</p> -->
+	<div class="logo_main">
+	  <div><img src="https://aiawards.indialeadersforsocialsector.com/assets/koita/ai-award-logo-unit.webp" alt="AI Award Logo Unit"></div>
+      <!-- <div><img src="/assets/koita/koita-foundation.webp" alt="Koita Foundation"></div> -->
+	</div>
+    </div>
+  </div>
+</section>
+
+<section class="why-strip">
+  <div class="wrap why-card">
+    <div class="why-item">
+      <div class="why-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" data-name="Layer 1" viewBox="0 0 512 512"><path d="M480.021,377.834c-.125,0-.25,0-.375.01l-155.275,8.33c1.725-15.289-3.238-30.94-14.451-40.72L217.967,265.4c-15.779-13.746-33.765-19.316-58.342-18.068l-69.168,3.612v-19.5a18.687,18.687,0,0,0-18.652-18.681H18.684A18.7,18.7,0,0,0,0,231.453V435.6a18.7,18.7,0,0,0,18.681,18.681H71.805A18.687,18.687,0,0,0,90.457,435.6V417.009h28.658a15.932,15.932,0,0,1,10.4,3.621l54.517,43.12c13.819,10.9,30.575,21.622,51.905,21.622a65.8,65.8,0,0,0,9.639-.719l221.358-32.74q.232-.035.462-.084c1.891-.411,3.848-.782,5.92-1.176,15.4-2.924,38.685-7.342,38.685-37.273C512,393.78,497.652,377.834,480.021,377.834ZM76.453,435.6a4.725,4.725,0,0,1-4.648,4.677H18.684a4.739,4.739,0,0,1-4.677-4.677V231.453a4.739,4.739,0,0,1,4.677-4.677H71.805a4.725,4.725,0,0,1,4.648,4.677ZM470.7,436.9c-1.992.379-4.05.77-6.05,1.2L243.524,470.8c-16.727,2.472-31.446-2.755-50.815-18.039L138.2,409.651a29.641,29.641,0,0,0-19.088-6.646H90.457V264.971l69.89-3.65c20.943-1.055,35.418,3.313,48.423,14.644l91.95,80.046c11.958,10.43,13.216,32.712,2.641,46.747-11.235,14.9-28.316,10.764-39.533,2.7l-66.16-47.566a7,7,0,1,0-8.174,11.369l66.159,47.566c21.189,15.237,44.853,12.972,58.89-5.639a49.5,49.5,0,0,0,6.163-10.793l159.485-8.555c9.831.109,17.8,9.731,17.8,21.541C497.993,430.864,488.132,433.588,470.7,436.9ZM52.246,256.455v.368a7,7,0,0,1-14,0v-.368a7,7,0,0,1,14,0ZM366.353,150.721a32.576,32.576,0,0,0-41.883,24.161,6.224,6.224,0,0,1-4.955,4.963,32.562,32.562,0,0,0-24.169,41.862,6.282,6.282,0,0,1-1.8,6.785,32.51,32.51,0,0,0-.038,48.293,6.3,6.3,0,0,1,1.837,6.817,32.562,32.562,0,0,0,24.158,41.863,6.236,6.236,0,0,1,4.968,4.976,32.572,32.572,0,0,0,41.85,24.158,6.258,6.258,0,0,1,6.791,1.817,32.6,32.6,0,0,0,48.357,0,6.24,6.24,0,0,1,6.754-1.828A32.572,32.572,0,0,0,470.742,326.1a32.572,32.572,0,0,0,28.5-42.494,6.254,6.254,0,0,1,1.8-6.787,32.511,32.511,0,0,0,.019-48.311,6.272,6.272,0,0,1-1.811-6.825,32.553,32.553,0,0,0-24.194-41.837,6.215,6.215,0,0,1-4.939-4.977,32.574,32.574,0,0,0-41.884-24.147,6.2,6.2,0,0,1-6.758-1.826,32.6,32.6,0,0,0-48.357,0h0A6.193,6.193,0,0,1,366.353,150.721Zm17.162,7.553a18.6,18.6,0,0,1,27.555,0,20.2,20.2,0,0,0,21.481,5.769,18.571,18.571,0,0,1,23.872,13.769,20.214,20.214,0,0,0,15.715,15.732,18.55,18.55,0,0,1,13.781,23.845,20.277,20.277,0,0,0,5.742,21.5,18.509,18.509,0,0,1-.019,27.545,20.261,20.261,0,0,0-5.73,21.465,18.577,18.577,0,0,1-21.231,23.955,7,7,0,0,0-8.2,8.223,18.555,18.555,0,0,1-23.97,21.177,20.269,20.269,0,0,0-21.443,5.782,18.6,18.6,0,0,1-27.554,0,20.212,20.212,0,0,0-15.091-6.777,20.989,20.989,0,0,0-6.381,1A18.571,18.571,0,0,1,338.163,327.5a20.231,20.231,0,0,0-15.737-15.73,18.56,18.56,0,0,1-13.76-23.846,20.334,20.334,0,0,0-5.741-21.5,18.509,18.509,0,0,1,.038-27.562,20.317,20.317,0,0,0,5.7-21.474,18.559,18.559,0,0,1,13.77-23.843,20.223,20.223,0,0,0,15.725-15.717,18.568,18.568,0,0,1,8.877-12.2,18.358,18.358,0,0,1,15-1.584A20.189,20.189,0,0,0,383.515,158.274Zm-61.666,94.382A75.444,75.444,0,1,0,397.278,177.2,75.53,75.53,0,0,0,321.849,252.656ZM397.278,191.2a61.455,61.455,0,1,1-61.425,61.454A61.524,61.524,0,0,1,397.278,191.2ZM269.188,75.353l24.347,17.612-9.351,28.565a7,7,0,0,0,10.781,7.835l24.276-17.711,24.276,17.711a7,7,0,0,0,10.782-7.829l-9.328-28.568,24.351-17.615a7,7,0,0,0-4.1-12.675h-.012l-30.072.049L325.9,34.136a7,7,0,0,0-13.326,0l-9.231,28.591L273.3,62.678h-.012a7,7,0,0,0-4.1,12.675Zm39.241,1.386h.011a7,7,0,0,0,6.664-4.851l4.137-12.813,4.137,12.813a7,7,0,0,0,6.663,4.851h.012l13.492-.023-10.918,7.9a7,7,0,0,0-2.552,7.846l4.185,12.816-10.892-7.946a7,7,0,0,0-8.254,0l-10.87,7.93,4.19-12.8a7,7,0,0,0-2.551-7.851l-10.918-7.9ZM69.817,148.851,85.1,153.1c.894,2.488,1.917,4.946,3.06,7.356l-7.8,13.812a7.005,7.005,0,0,0,.335,7.422,98.657,98.657,0,0,0,25.227,25.226,7,7,0,0,0,7.421.335l13.819-7.8c2.413,1.142,4.868,2.163,7.346,3.058l4.248,15.293a7,7,0,0,0,5.477,5.011,99.3,99.3,0,0,0,35.71,0,7,7,0,0,0,5.471-5.01l4.246-15.288c2.486-.893,4.95-1.917,7.373-3.062l13.79,7.8a7,7,0,0,0,7.417-.326A98.882,98.882,0,0,0,243.5,181.7a7,7,0,0,0,.344-7.434l-7.8-13.816c1.127-2.387,2.142-4.844,3.039-7.353l15.281-4.245a7,7,0,0,0,5.012-5.477,99.222,99.222,0,0,0,0-35.7,7,7,0,0,0-5.012-5.478l-15.281-4.245q-1.344-3.764-3.039-7.354l7.8-13.815a7.005,7.005,0,0,0-.343-7.434,99.491,99.491,0,0,0-25.244-25.239,7.006,7.006,0,0,0-7.437-.331l-13.776,7.816q-3.593-1.7-7.38-3.058l-4.245-15.282a7,7,0,0,0-5.471-5.011,99.681,99.681,0,0,0-35.71,0,7,7,0,0,0-5.477,5.012l-4.247,15.289q-3.767,1.352-7.354,3.052l-13.8-7.819a7,7,0,0,0-7.442.338A99.261,99.261,0,0,0,80.7,69.359a7.005,7.005,0,0,0-.335,7.421l7.8,13.811q-1.715,3.617-3.06,7.357l-15.287,4.246a7,7,0,0,0-5.017,5.513,99.2,99.2,0,0,0,0,35.632A7,7,0,0,0,69.817,148.851Zm8.1-34.374,14.525-4.035a7,7,0,0,0,4.824-4.7A67.364,67.364,0,0,1,102.274,93.7a7,7,0,0,0-.08-6.74L94.771,73.814a85.153,85.153,0,0,1,15.612-15.629l13.133,7.439a7,7,0,0,0,6.762.077,67.125,67.125,0,0,1,12.035-5,7,7,0,0,0,4.694-4.819l4.038-14.54a85.971,85.971,0,0,1,22.085,0l4.039,14.541a7,7,0,0,0,4.7,4.823,66.569,66.569,0,0,1,12.053,5,7,7,0,0,0,6.766-.079L213.8,58.184A85.383,85.383,0,0,1,229.43,73.821l-7.42,13.137a7,7,0,0,0-.079,6.741,67.328,67.328,0,0,1,4.978,12.039,7,7,0,0,0,4.823,4.7l14.539,4.038a85.747,85.747,0,0,1,0,22.085L231.732,140.6a7,7,0,0,0-4.823,4.7,67.328,67.328,0,0,1-4.978,12.039,7,7,0,0,0,.079,6.742l7.42,13.136A84.735,84.735,0,0,1,213.8,192.84l-13.118-7.42a7,7,0,0,0-6.727-.092,68.68,68.68,0,0,1-12.086,5.015,7,7,0,0,0-4.7,4.824l-4.039,14.541a86.016,86.016,0,0,1-22.085,0l-4.038-14.538a7,7,0,0,0-4.692-4.82,69.269,69.269,0,0,1-12.069-5.019,7,7,0,0,0-6.723.089L110.38,192.84a84.565,84.565,0,0,1-15.609-15.609l7.423-13.144a7,7,0,0,0,.08-6.741,67.3,67.3,0,0,1-5.006-12.039,7,7,0,0,0-4.824-4.7l-14.525-4.035a84.043,84.043,0,0,1,0-22.091Zm52.364,65.867h63.638a7,7,0,0,0,7-7V151.205c0-16.084-14-29.169-31.21-29.169H154.491c-17.209,0-31.21,13.085-31.21,29.169v22.137A7,7,0,0,0,130.283,180.344Zm7-29.139c0-8.363,7.719-15.165,17.206-15.165h15.222c9.487,0,17.206,6.8,17.206,15.165V166.34H137.285Zm24.8-31.493A24.52,24.52,0,1,0,137.6,95.192,24.548,24.548,0,0,0,162.088,119.712Zm0-35.037A10.517,10.517,0,1,1,151.6,95.192,10.528,10.528,0,0,1,162.088,84.675ZM357.121,261.208a7,7,0,0,1,9.9-9.9l16.139,16.14,44.4-44.4a7,7,0,1,1,9.9,9.9L388.113,282.3a7,7,0,0,1-9.9,0Zm31.32-185.855,24.348,17.612-9.352,28.565a7,7,0,0,0,10.781,7.835l24.276-17.711,24.277,17.711a7,7,0,0,0,10.782-7.829l-9.328-28.568,24.351-17.615a7,7,0,0,0-4.1-12.675h-.012l-30.073.049-9.231-28.591a7,7,0,0,0-13.326,0L422.6,62.727l-30.044-.049h-.012a7,7,0,0,0-4.1,12.675Zm39.242,1.386h.011a7,7,0,0,0,6.663-4.851l4.137-12.813,4.137,12.813a7,7,0,0,0,6.663,4.851h.012l13.493-.023-10.918,7.9a7,7,0,0,0-2.552,7.846l4.185,12.817-10.893-7.947a7,7,0,0,0-8.254,0L423.5,105.26l4.19-12.794a7,7,0,0,0-2.551-7.851l-10.918-7.9Z"></path></svg>
+        <span class="spark s1"></span>
+        <span class="spark s2"></span>
+        <span class="spark s3"></span>
+        <span class="spark s4"></span>
+      </div>
+      <span class="why-sep"></span>
+      <div class="why-text">
+        <h3>Impact</h3>
+        <span class="why-underline"></span>
+        <p>Demonstrate how your AI expands reach, improves beneficiary outcomes and enhances efficiency</p>
+      </div>
+    </div>
+
+    <div class="why-item">
+      <div class="why-icon">
+        <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" data-name="Layer 1">
+  <path d="m33 11v-4.18c1.16-.41 2-1.51 2-2.82 0-1.65-1.35-3-3-3s-3 1.35-3 3c0 1.3.84 2.4 2 2.82v4.18zm-1-8c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1z"></path>
+
+  <path d="m60 29c-1.3 0-2.4.84-2.82 2h-4.18v2h4.18c.41 1.16 1.51 2 2.82 2 1.65 0 3-1.35 3-3s-1.35-3-3-3zm0 4c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1z"></path>
+
+  <path d="m44.67 17.84c-4.08-3.65-9.35-5.33-14.84-4.72-8.94.99-15.99 8.23-16.76 17.2-.72 8.4 4.16 16.24 11.93 19.32v6.35c0 3.86 3.14 7 7 7s7-3.14 7-7v-6.35c7.21-2.86 12-9.86 12-17.65 0-5.4-2.31-10.56-6.33-14.16zm-12.67 43.16c-2.05 0-3.8-1.24-4.58-3h9.15c-.77 1.76-2.53 3-4.58 3zm5-5h-10v-3h10zm.67-7.99c-.4.14-.67.52-.67.94v2.05h-10v-2.05c0-.42-.27-.8-.67-.94-7.3-2.58-11.93-9.79-11.27-17.52.69-8.03 6.99-14.5 14.99-15.39.66-.07 1.32-.11 1.97-.11 4.19 0 8.15 1.5 11.31 4.33 3.6 3.22 5.67 7.84 5.67 12.67 0 7.18-4.55 13.61-11.33 16.01z"></path>
+
+  <path d="m11 31h-4.18c-.41-1.16-1.51-2-2.82-2-1.65 0-3 1.35-3 3s1.35 3 3 3c1.3 0 2.4-.84 2.82-2h4.18zm-7 2c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1z"></path>
+
+  <path d="m50.52 49.11-2.97-2.97-1.41 1.41 2.96 2.96c-.19.4-.3.83-.3 1.29 0 .8.31 1.55.88 2.12.57.57 1.32.88 2.12.88s1.56-.31 2.12-.88.88-1.32.88-2.12-.31-1.55-.88-2.12c-.89-.89-2.29-1.07-3.4-.57zm1.98 3.4c-.38.38-1.03.38-1.41 0-.19-.19-.29-.44-.29-.71s.1-.52.29-.71.44-.29.71-.29.52.1.71.29.29.44.29.71-.1.52-.29.71z"></path>
+
+  <path d="m10.08 10.08c-.57.57-.88 1.32-.88 2.12s.31 1.55.88 2.12 1.32.88 2.12.88c.45 0 .89-.11 1.29-.3l2.96 2.96 1.41-1.41-2.96-2.96c.19-.4.3-.83.3-1.29 0-.8-.31-1.55-.88-2.12-1.14-1.13-3.11-1.13-4.24 0zm2.83 2.83c-.38.38-1.04.38-1.41 0-.19-.19-.29-.44-.29-.71s.1-.52.29-.71.44-.29.71-.29.52.1.71.29c.19.19.29.44.29.71s-.1.52-.29.71z"></path>
+
+  <path d="m47.56 17.86 2.96-2.96c.4.19.83.3 1.29.3.8 0 1.55-.31 2.12-.88.57-.57.88-1.32.88-2.12s-.31-1.56-.88-2.12c-1.13-1.13-3.11-1.13-4.24 0-.57.57-.88 1.32-.88 2.12 0 .45.11.89.3 1.29l-2.96 2.96zm3.54-6.36c.19-.19.44-.29.71-.29s.52.1.71.29.29.44.29.71-.1.52-.29.71c-.38.38-1.03.38-1.41 0-.19-.19-.29-.44-.29-.71s.1-.52.29-.71z"></path>
+
+  <path d="m16.44 46.14-2.97 2.97c-1.11-.5-2.51-.32-3.4.57-.57.57-.88 1.32-.88 2.12s.31 1.56.88 2.12 1.32.88 2.12.88 1.55-.31 2.12-.88.88-1.32.88-2.12c0-.45-.11-.89-.3-1.29l2.96-2.96zm-3.54 6.36c-.38.38-1.04.38-1.41 0-.19-.19-.29-.44-.29-.71s.1-.52.29-.71c.19-.19.44-.29.71-.29s.52.1.71.29.29.44.29.71-.1.52-.29.71z"></path>
+</svg>
+        <span class="spark s1"></span>
+        <span class="spark s2"></span>
+        <span class="spark s3"></span>
+        <span class="spark s4"></span>
+      </div>
+      <span class="why-sep"></span>
+      <div class="why-text">
+        <h3>Innovate</h3>
+        <span class="why-underline"></span>
+        <p>Present unique and practical AI solutions to solve real-world social challenges</p>
+      </div>
+    </div>
+
+    <div class="why-item">
+      <div class="why-icon">
+        <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" data-name="Layer 1">
+  <path d="m51.18 42.31c.91.29 1.89-.21 2.18-1.11l1.59-4.88c.17-.52-.12-1.09-.64-1.26l-2.21-.72c.09-.78.14-1.56.14-2.34s-.05-1.56-.14-2.34l1.51-.49c.44-.14.8-.45 1.01-.86s.25-.88.1-1.32l-1.36-4.18c-.29-.91-1.28-1.41-2.18-1.11l-1.51.49c-.77-1.36-1.69-2.64-2.75-3.79l.94-1.29c.56-.77.39-1.86-.38-2.42l-3.56-2.59c-.77-.56-1.86-.39-2.42.38l-.94 1.29c-1.43-.66-2.92-1.15-4.45-1.45v-1.59c0-.96-.78-1.73-1.73-1.73h-4.4c-.96 0-1.73.78-1.73 1.73v1.59c-1.53.3-3.02.79-4.45 1.45l-.94-1.29c-.56-.77-1.64-.94-2.42-.38l-3.56 2.59c-.38.27-.62.67-.69 1.13s.04.92.31 1.29l.93 1.29c-1.06 1.15-1.98 2.42-2.75 3.79l-1.51-.49c-.44-.14-.91-.11-1.32.1s-.72.57-.86 1.01l-1.36 4.18c-.14.44-.11.91.1 1.32s.57.72 1.01.86l1.51.49c-.09.78-.14 1.56-.14 2.34s.05 1.56.14 2.34l-2.21.72c-.52.17-.81.74-.64 1.26l1.59 4.88c.14.44.45.8.86 1.01s.88.25 1.32.1l1.51-.49c.77 1.37 1.69 2.64 2.75 3.79l-.93 1.29c-.27.38-.38.83-.31 1.29s.32.86.69 1.13l3.56 2.59c.77.56 1.86.39 2.42-.38l.94-1.29c1.43.66 2.92 1.15 4.45 1.45v1.59c0 .96.78 1.73 1.73 1.73h4.4c.96 0 1.73-.78 1.73-1.73v-1.59c1.53-.3 3.02-.79 4.45-1.45l.93 1.29c.56.77 1.65.95 2.42.38l3.56-2.59c.77-.56.95-1.65.38-2.42l-.93-1.29c1.06-1.15 1.98-2.42 2.75-3.79zm-3.16-1.64c-.74 1.35-1.65 2.6-2.7 3.72-.57.61-.64 1.54-.15 2.21l.91 1.25-3.13 2.27-.91-1.25c-.49-.67-1.39-.9-2.15-.54-1.39.66-2.86 1.14-4.36 1.42-.82.15-1.42.87-1.42 1.7v1.54h-3.87v-1.54c0-.83-.6-1.55-1.42-1.7-1.5-.28-2.97-.76-4.37-1.42-.76-.36-1.66-.13-2.15.54l-.91 1.25-3.13-2.27.91-1.25c.49-.67.43-1.6-.15-2.21-1.05-1.12-1.96-2.37-2.7-3.72-.4-.73-1.27-1.08-2.05-.82l-1.47.48-1.19-3.68 1.47-.48c.79-.26 1.29-1.04 1.18-1.88-.1-.76-.15-1.54-.15-2.3s.05-1.53.15-2.3c.11-.83-.39-1.62-1.18-1.88l-1.47-.48 1.19-3.68 1.47.48c.79.26 1.65-.09 2.06-.82.74-1.35 1.65-2.6 2.7-3.72.58-.61.64-1.54.15-2.21l-.91-1.25 3.13-2.27.91 1.25c.49.67 1.39.9 2.15.54 1.39-.66 2.86-1.14 4.36-1.42.82-.15 1.42-.87 1.42-1.7v-1.54h3.87v1.54c0 .83.6 1.55 1.42 1.7 1.5.28 2.97.76 4.37 1.42.76.36 1.66.13 2.15-.54l.91-1.25 3.13 2.27-.91 1.25c-.49.67-.43 1.6.15 2.21 1.05 1.12 1.96 2.37 2.7 3.72.4.73 1.27 1.08 2.05.82l1.47-.48 1.2 3.68-1.47.48c-.79.26-1.29 1.04-1.18 1.88.1.76.15 1.54.15 2.3s-.05 1.53-.15 2.3c-.11.83.39 1.62 1.18 1.88l1.47.48-1.2 3.68-1.47-.48c-.79-.09-1.65.09-2.05.82z"></path>
+
+  <path d="m46.55 57.09c-11.04 6.41-24.97 4.78-34.28-3.87l1.91.27.28-1.98-4.95-.71c-.32-.04-.63.06-.85.28s-.33.54-.28.85l.71 4.95 1.98-.28-.29-2.02c5.89 5.53 13.53 8.41 21.25 8.41 5.33 0 10.69-1.37 15.53-4.18l-1-1.73z"></path>
+
+  <path d="m58.98 16.71-1.74.99c6.23 10.99 4.54 24.81-4.01 34.03l.27-1.91-1.98-.28-.71 4.95c-.04.31.06.63.28.85.19.19.44.29.71.29h.14l4.95-.71-.28-1.98-2.05.29c9.26-9.85 11.11-24.71 4.42-36.51z"></path>
+
+  <path d="m16.71 5.02.99 1.74c10.99-6.23 24.81-4.54 34.03 4.02l-1.91-.27-.28 1.98 4.95.71s.09 0 .14 0c.26 0 .52-.1.71-.29.22-.22.33-.54.28-.85l-.71-4.95-1.98.28.29 2.05c-9.84-9.26-24.71-11.11-36.51-4.42z"></path>
+
+  <path d="m10.5 14.18 1.98.28.71-4.95c.04-.31-.06-.63-.28-.85s-.53-.33-.85-.28l-4.95.71.28 1.98 2.05-.29c-9.26 9.84-11.11 24.71-4.42 36.51l1.74-.99c-6.23-10.99-4.54-24.81 4.02-34.03l-.27 1.91z"></path>
+</svg>
+        <span class="spark s1"></span>
+        <span class="spark s2"></span>
+        <span class="spark s3"></span>
+        <span class="spark s4"></span>
+      </div>
+      <span class="why-sep"></span>
+      <div class="why-text">
+        <h3>Inspire</h3>
+        <span class="why-underline"></span>
+        <p>Share your learnings openly to strengthen the sector. Get featured on leading platforms like ILSS and other events.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== SUB-NAV ===================== -->
+<nav class="subnav" id="subnav" aria-label="Page sections" style="display: none;">
+  <div class="wrap subnav-inner">
+    <!-- <a href="#about" data-spy="about">Overview</a> -->
+    <a href="#categories" data-spy="categories">Categories</a>
+    <a href="#how" data-spy="how">How It Works</a>
+    <a href="#eligibility" data-spy="eligibility">Eligibility</a>
+    <!-- <a href="#gets" data-spy="gets">Rewards</a> -->
+    <a href="#register" data-spy="register">Register Now</a>
+    <a href="#jury" data-spy="jury">Jury</a>
+    <a href="#winners" data-spy="winners">Winners 2025</a>
+    <a href="#faq" data-spy="faq">FAQs</a>
+  </div>
+</nav>
+
+<!-- ===================== ABOUT ===================== -->
+<!-- <section class="section about" id="about" style="display: none;">
+  
+  <div class="wrap about-grid">
+    <div class="reveal">
+      <span class="eyebrow">WHY THESE AWARDS</span>
+      <h2>Recognising AI for Good.<br><span>Creating Measurable Social Impact.</span></h2>
+      <p>The <strong>AI for Impact</strong> Awards recognise Non Profits and Social Purpose Organisations across India that are using <strong>Artificial Intelligence</strong> to solve real-world challenges. Established in <strong>2025</strong>, the awards celebrate <strong>ethical, responsible and scalable AI solutions</strong> creating measurable social impact across education, healthcare, livelihoods, governance and beyond.</p>
+      <p>In 2025, the awards received <strong>60+ applications</strong>, with over <strong>12 AI solutions</strong> recognised and documented on the <a href="https://dt4si.com/" target="_blank" style="color: #7b325e;">Digital Toolbook for Social Impact (DT4SI)</a> platform—creating a growing knowledge base for <strong>AI innovation in the social sector</strong>.</p>
+    </div>
+
+    <div class="pillars">
+      <div class="pillar reveal d1">
+        <div class="picon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+        <div>
+          <h4>Deliver Impact</h4>
+          <p>Create measurable outcomes for communities through responsible AI solutions.</p>
+        </div>
+      </div>
+      <div class="pillar reveal d2">
+        <div class="picon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6M10 22h4M12 2a7 7 0 0 0-4 12.7c.6.5 1 1.3 1 2.1V18h6v-1.2c0-.8.4-1.6 1-2.1A7 7 0 0 0 12 2Z"/></svg></div>
+        <div>
+          <h4>Drive Innovation</h4>
+          <p>Recognise practical AI deployment for solving real-world challenges.</p>
+        </div>
+      </div>
+      <div class="pillar reveal d3">
+        <div class="picon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="m12 2 2.9 6.3 6.9.7-5.1 4.6 1.4 6.8L12 17.8 5.9 20.4l1.4-6.8L2.2 9l6.9-.7L12 2Z"/></svg></div>
+        <div>
+          <h4>Inspire the Sector</h4>
+          <p>Share proven AI innovations that others can learn from and scale by getting listed as transformation case studies on the <a href="https://dt4si.com/" target="_blank" style="color:#7b325e">Digital Toolbook for Social Impact (DT4SI)</a>.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section> -->
+
+
+<section class="section categories-sec" id="categories">
+  <div class="wrap">
+    <div class="stats_category_main">
+      <!-- ===================== CATEGORIES ===================== -->
+    <div class="cats">
+      <div class="cats-panel reveal">
+          <div class="cats-head"><h2>Awards & Recognition</h2></div>
+          <div class="cat-row">
+            <div class="cat reveal d1"><svg class="ctrophy" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6M18 9h1.5a2.5 2.5 0 0 0 0-5H18M6 4h12v5a6 6 0 0 1-12 0Z"/><path d="M12 15v4M8 21h8M9 18h6"/><path d="M8.5 6.5 12 8l3.5-1.5"/></svg><div class="ctag">First Prize</div><div class="cprize">₹20 Lakhs</div></div>
+            <div class="cat reveal d2"><svg class="ctrophy" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6M18 9h1.5a2.5 2.5 0 0 0 0-5H18M6 4h12v5a6 6 0 0 1-12 0Z"/><path d="M12 15v4M8 21h8M9 18h6"/></svg><div class="ctag">Second Prize</div><div class="cprize">₹10 Lakhs</div></div>
+            <div class="cat reveal d3"><svg class="ctrophy" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/></svg><div class="ctag">Third Prize (X3)</div><div class="cprize">₹5 Lakhs Each</div></div>
+            <div class="cat reveal d4"><svg class="ctrophy" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="m12 2 2.9 6.3 6.9.7-5.1 4.6 1.4 6.8L12 17.8 5.9 20.4l1.4-6.8L2.2 9l6.9-.7L12 2Z"/></svg><div class="ctag">People's Choice</div><div class="cprize">₹5 Lakhs</div></div>
+          </div>
+      </div>
+    </div>
+</div>
+</div>
+</section>
+
+<!-- ===================== WHAT WINNING GETS YOU ===================== -->
+<section class="section recognition">
+  <div class="wrap">
+
+  <div class="gets">
+    <div class="reveal">
+      <h2>Recognition Beyond the Award</h2>
+    </div>
+
+    <div class="gets-grid">
+
+  <div class="gcard reveal d1">
+    <div class="gcard_main">
+      <div class="gicon"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15 15 0 0 1 0 20 15 15 0 0 1 0-20Z"/></svg></div>
+      <div class="gi-text">
+        <h4>Featured in Digital Toolbook for Social Impact <a href="https://dt4si.com/" target="_blank">(DT4SI)</a></h4>
+        <span class="g-underline"></span>
+      </div>
+    </div>
+
+    <p>Showcase your <strong>AI solution</strong> on the <a href="https://dt4si.com/" target="_blank" style="color: #7b325e;">Digital Toolbook for Social Impact (DT4SI)</a> platform, helping nonprofits and social purpose organisations discover proven <strong>AI for Good</strong> initiatives.</p>
+
+    <a href="#" class="g-arrow" aria-label="Learn more">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+    </a>
+  </div>
+
+  <div class="gcard reveal d2">
+    <div class="gcard_main">
+      <div class="gicon"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M17 6.1H3M21 12.1H3M15.1 18H3"/></svg></div>
+      <div class="gi-text">
+        <h4>Be Part of the KCADT Community</h4>
+        <span class="g-underline"></span>
+      </div>
+    </div>
+
+    <p>Join a community of practitioners advancing <strong>Responsible AI</strong> and <strong>AI innovation</strong> through knowledge sharing and expert-led conversations.</p>
+
+    <a href="#" class="g-arrow" aria-label="Learn more">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+    </a>
+  </div>
+
+  <div class="gcard reveal d3">
+    <div class="gcard_main">
+      <div class="gicon"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 0 0-9.33-5M6 8a6 6 0 0 0 9.33 5"/><rect x="3" y="8" width="18" height="12" rx="2"/><path d="M12 12v4"/></svg></div>
+      <div class="gi-text">
+        <h4>Participate in IFRC</h4>
+        <span class="g-underline"></span>
+      </div>
+    </div>
+
+    <p>Present your AI innovation at the <strong>India Fundraising Conference (IFRC) 2027</strong>, a premier gathering of leaders from across the social impact sector.</p>
+
+    <a href="#" class="g-arrow" aria-label="Learn more">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+    </a>
+  </div>
+
+</div>
+    
+  </div>
+  </div>
+</section>
+
+
+<!-- ===================== WINNERS ===================== -->
+<section class="section winners" id="winners--" style="display: none;">
+  <div class="wrap">
+    <div class="win-top reveal">
+      <span class="eyebrow">Winners 2025</span>
+      <h2>Recognised, by Focus Area</h2>
+      <p>Every winning solution links to a full case study on DT4I.</p>
+    </div>
+    <div class="tabs reveal d1" id="winTabs"></div>
+    <div class="win-grid" id="winGrid"></div>
+    <div class="win-foot reveal"><a href="https://dt4si.com/digital-transformation-case-studies" target="_blank" rel="noopener" class="btn btn-outline">View all winners &amp; case studies on DT4I <span class="arw">&rarr;</span></a></div>
+  </div>
+</section>
+
+<!-- ===================== HOW IT WORKS ===================== -->
+<section class="section how" id="how">
+  <!-- <svg style="position:absolute;top:120px;left:0;width:100%;height:200px;opacity:.5;z-index:0" viewBox="0 0 1000 200" preserveAspectRatio="none" aria-hidden="true">
+    <path d="M50 120 Q300 40 500 120 T950 120" fill="none" stroke="#dcb22f" stroke-width="1.5" stroke-dasharray="2 8" stroke-linecap="round" opacity=".4"/>
+  </svg> -->
+  <div class="wrap" style="position:relative;z-index:2">
+    <div class="reveal" style="text-align:center">
+      <span class="eyebrow" style="justify-content:center">How it works</span>
+      <h2>The Award Process</h2>
+    </div>
+    <!-- <div class="how-grid">
+      <div class="step reveal d1">
+        <div class="step-connector"></div><div class="sicon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M19 8v6M22 11h-6"/></svg></div> <div class="snum">01 / 05</div>
+        <h4>Register Your Interest</h4>
+        <p>Tell us about your organisation and AI solution. We will share the application details and guide you through the process.</p>
+      </div>
+
+      <div class="step reveal d2">
+        <div class="step-connector"></div><div class="sicon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z"/><path d="M14 2v6h6M9 15l2 2 4-4"/></svg></div> <div class="snum">02 / 05</div>
+        <h4>Submit Your Application</h4>
+        <p>Submit details of your AI solution, measurable social impact and supporting documents through the application portal.</p><div class="deadline"><span>App. Deadline:</span> 30 Sep 2026</div>
+      </div>
+      
+      <div class="step reveal d3"><div class="step-connector"></div><div class="sicon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2Z"/><path d="M8 9h8M8 13h5"/></svg></div> <div class="snum">03 / 05</div><h4>Present to the Jury</h4><p>Shortlisted organisations present their AI innovation, demonstrate real-world impact, and participate in a live Q&A.</p></div>
+
+      <div class="step reveal d4">
+        <div class="step-connector"></div><div class="sicon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"> <path d="M7 10v12"/> <path d="M15 5.88 14 10h5.83a2 2 0 0 1 1.92 2.56l-2.33 8A2 2 0 0 1 17.5 22H4a1 1 0 0 1-1-1v-9a1 1 0 0 1 1-1h2.76a2 2 0 0 0 1.79-1.11L12 4v0a2.5 2.5 0 0 1 3 1.88Z"/></svg></div><div class="snum">04 / 05</div>
+        <h4>Audience Poll</h4>
+        <p>Finalists showcase their AI solution for audience poll and wider recognition across the social impact ecosystem.</p>
+      </div>
+
+      <div class="step reveal d5"><div class="sicon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6M18 9h1.5a2.5 2.5 0 0 0 0-5H18M6 4h12v5a6 6 0 0 1-12 0Z"/><path d="M12 15v4M8 21h8"/></svg></div> <div class="snum">05 / 05</div> <h4>Awards Finale</h4><p>Join us in Delhi at the India Fundraising Conference (IFRC) for the final presentations and announcement of The ILSS - KCADT AI Awards 2026.</p><div class="deadline">February 2027</div></div>
+    </div> -->
+
+	  <div class="process">
+
+  <!-- MOBILE -->
+  <div class="mobile-track">
+
+    <div>
+      <div>Open Now</div>
+      <div>25 Aug 2026</div>
+      <div>Registration of interest</div>
+
+      <div>01 / 05</div>
+      <h4>Register Your Interest</h4>
+      <p>Tell us about your organisation and AI solution. We will share the application details and guide you through the process.</p>
+      <!-- <a href="#register">Register now →</a> -->
+    </div>
+
+    <div>
+      <div>Deadline</div>
+      <div>11 Oct 2026</div>
+      <div>Applications close</div>
+
+      <div>02 / 05</div>
+      <h4>Submit Your Application</h4>
+      <p>Submit details of your AI solution, measurable social impact and supporting documents through the application portal.</p>
+    </div>
+
+    <div>
+      <div>Two Days</div>
+      <div>3–4 Dec 2026</div>
+      <div>Jury presentations</div>
+
+      <div>03 / 05</div>
+      <h4>Present to the Jury</h4>
+      <p>Shortlisted organisations present their AI innovation, demonstrate real-world impact, and participate in a live Q&amp;A.</p>
+    </div>
+
+    <div>
+      <div>Three Weeks</div>
+      <div>19 Nov – 18 Dec</div>
+      <div>Audience poll open</div>
+
+      <div>04 / 05</div>
+      <h4>Audience Poll</h4>
+      <p>Finalists showcase their AI solution for audience poll and wider recognition across the social impact ecosystem.</p>
+    </div>
+
+    <div>
+      <div>Finale</div>
+      <div>17 Feb 2027</div>
+      <div>Awards night, Delhi</div>
+
+      <div>05 / 05</div>
+      <h4>Awards Finale</h4>
+      <p>Join us in Delhi at the India Fundraising Conference (IFRC) for the final presentations and announcement of The ILSS - KCADT AI Awards 2026.</p>
+    </div>
+
+  </div>
+
+
+  <!-- TABLET / DESKTOP -->
+  <div class="desktop-track">
+
+    <div class="dates">
+
+      <div>
+        <div>Open Now</div>
+        <div>25 Aug 2026</div>
+        <p>Registration of interest</p>
+      </div>
+
+      <div>
+        <div>Deadline</div>
+        <div>11 Oct 2026</div>
+        <p>Applications close</p>
+      </div>
+
+      <div>
+        <div>Two Days</div>
+        <div>3–4 Dec 2026</div>
+        <p>Jury presentations</p>
+      </div>
+
+      <div>
+        <div>Three Weeks</div>
+        <div>19 Nov – 18 Dec</div>
+        <p>Audience poll open</p>
+      </div>
+
+      <div>
+        <div>Finale</div>
+        <div>17 Feb 2027</div>
+        <p>Awards night, Delhi</p>
+      </div>
+
+    </div>
+
+    <hr>
+
+    <div class="content">
+
+      <div>
+        <div>01 / 05</div>
+        <h4>Register Your Interest</h4>
+        <p>Tell us about your organisation and AI solution. We will share the application details and guide you through the process.</p>
+        <!-- <a href="#register">Register now →</a> -->
+      </div>
+
+      <div>
+        <div>02 / 05</div>
+        <h4>Submit Your Application</h4>
+        <p>Submit details of your AI solution, measurable social impact and supporting documents through the application portal.</p>
+      </div>
+
+      <div>
+        <div>03 / 05</div>
+        <h4>Present to the Jury</h4>
+        <p>Shortlisted organisations present their AI innovation, demonstrate real-world impact, and participate in a live Q&amp;A.</p>
+      </div>
+
+      <div>
+        <div>04 / 05</div>
+        <h4>Audience Poll</h4>
+        <p>Finalists showcase their AI solution for audience poll and wider recognition across the social impact ecosystem.</p>
+      </div>
+
+      <div>
+        <div>05 / 05</div>
+        <h4>Awards Finale</h4>
+        <p>Join us in Delhi at the India Fundraising Conference (IFRC) for the final presentations and announcement of The ILSS - KCADT AI Awards 2026.</p>
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+  </div>
+</section>
+
+<!-- ===================== ELIGIBILITY ===================== -->
+<section class="section elig" id="eligibility">
+  <div class="wrap">
+    <div class="reveal" style="text-align:center">
+      <span class="eyebrow" style="justify-content:center">ELIGIBILITY</span>
+      <h2>Eligibility Criteria</h2>
+      <!-- <p><em>If you can answer 'Yes' to the following, we'd love to receive your application.</em></p> -->
+    </div>
+    <div class="elig-grid">
+      <div class="elig-card reveal d1">
+        <div class="elig-head">
+          <span class="elig-num">1</span>
+          <h3>Registered organisation</h3>
+          <p>Be a registered Indian nonprofit or social-purpose organisation.</p>
+        </div>
+      </div>
+      <div class="elig-card reveal d2">
+        <div class="elig-head">
+          <span class="elig-num">2</span>
+          <h3>AI at the core</h3>
+          <p>Your AI solution should be central to solving the problem, not just an added feature.</p>
+        </div>
+      </div>
+      <!-- <div class="elig-card reveal d3">
+        <div class="elig-head">
+          <span class="elig-num">3</span>
+          <h3>Proven social impact</h3>
+          <p>Your solution should already be deployed and creating measurable social impact with real users.</p>
+        </div>
+      </div> -->
+      <div class="elig-card reveal d4">
+        <div class="elig-head">
+          <span class="elig-num">3</span>
+          <h3>Responsible AI practices</h3>
+          <p>Follow ethical, safe and responsible AI practices throughout design and deployment.</p>
+        </div>
+      </div>
+      <div class="elig-card reveal d1">
+        <div class="elig-head">
+          <span class="elig-num">4</span>
+          <h3>Clear value & impact</h3>
+          <p>Demonstrate clear social impact and value relative to the cost of running the solution.</p>
+        </div>
+      </div>
+      <div class="elig-card reveal d2">
+        <div class="elig-head">
+          <span class="elig-num">5</span>
+          <h3>Ready to scale</h3>
+          <p>Have the capability to operate, maintain and responsibly scale your AI solution.</p>
+        </div>
+      </div>
+      <div class="elig-card reveal d3">
+        <div class="elig-head">
+          <span class="elig-num">6</span>
+          <h3>Open to documentation</h3>
+          <p>Be willing to document your AI solution as an open case study on the <a href="https://dt4si.com/" target="_blank">Digital Toolbook for Social Impact (DT4SI)</a> platform.</p>
+        </div>
+      </div>
+      <!-- <div class="elig-card reveal d4">
+        <div class="elig-head">
+          <span class="elig-num">8</span>
+          <h3>Share & strengthen</h3>
+          <p>Be committed to sharing learnings that strengthen the wider social impact ecosystem.</p>
+        </div>
+      </div> -->
+    </div>
+    
+    <div class="disclaimer-card">
+  <p class="disclaimer-card__title">
+    <span class="disclaimer-card__label">Note:</span> Previous-year applicants</p>
+  <p class="disclaimer-card__text">
+    Finalists from the <a href="https://www.koitafoundation.org/awards" target="_blank"><strong>KF TECH AWARDS 2025</strong></a> are eligible to apply again, provided the submission is for a new or substantially different AI solution.
+  </p>
+</div>
+
+  </div>
+</section>
+
+<!-- =====================  Evaluation  ===================== -->
+<section class="eval-method">
+  <div class="wrap">
+    <div class="eval-head">
+      <span class="eyebrow">How Winners Are Chosen</span>
+      <h2 class="reveal d1">Evaluation Parameters</h2>
+      <!-- <p class="eval-desc reveal d3">Every nomination undergoes rigorous evaluation by our expert jury. Each entry is scored on a 1&ndash;10 scale across five critical criteria, ensuring a comprehensive and fair assessment:</p> -->
+    </div>
+
+    <div class="eval-grid">
+
+      <div class="eval-card reveal d1">
+        <span class="eval-pct">25</span>
+        <span class="eval-icon" aria-hidden="true">
+          <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M9 39V27" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/>
+            <path d="M18.5 39V21" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/>
+            <path d="M28 39V15" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/>
+            <path d="M37.5 39V9" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/>
+            <path d="M6 39H42" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/>
+          </svg>
+        </span>
+        <h3>Solution Design & Outcomes</h3>
+        <p>The effectiveness of the AI solution in addressing the challenge, and the measurable value and outcomes created through its implementation.</p>
+      </div>
+
+      <div class="eval-card reveal d2">
+        <span class="eval-pct">20</span>
+        <span class="eval-icon" aria-hidden="true">
+          <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="16" cy="17" r="5" stroke="currentColor" stroke-width="2.2"/>
+            <circle cx="32" cy="17" r="5" stroke="currentColor" stroke-width="2.2"/>
+            <path d="M6 38c0-6 4.5-10 10-10s10 4 10 10" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>
+            <path d="M22 38c0-6 4.5-10 10-10s10 4 10 10" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>
+          </svg>
+        </span>
+        <h3>Adoption & Community Validation</h3>
+        <p>Evidence of meaningful adoption, user engagement, and validation from the communities and stakeholders the solution serves.</p>
+      </div>
+
+      <div class="eval-card reveal d3">
+        <span class="eval-pct">20</span>
+        <span class="eval-icon" aria-hidden="true">
+          <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M24 6l14 5v11c0 10-6 16.5-14 20-8-3.5-14-10-14-20V11l14-5z" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"/>
+            <path d="M17.5 24l4.5 4.5 9-9" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </span>
+        <h3>Responsible AI & Team Capability</h3>
+        <p>Responsible development and implementation of the solution, supported by the skills and capabilities needed to manage and sustain it effectively.</p>
+      </div>
+
+      <div class="eval-card reveal d4">
+        <span class="eval-pct">20</span>
+        <span class="eval-icon" aria-hidden="true">
+          <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <ellipse cx="17" cy="13" rx="8" ry="4" stroke="currentColor" stroke-width="2.2"/>
+    <path d="M9 13v6c0 2.2 3.6 4 8 4s8-1.8 8-4v-6" stroke="currentColor" stroke-width="2.2"/>
+    <path d="M9 19v6c0 2.2 3.6 4 8 4 1.7 0 3.3-.3 4.7-.8" stroke="currentColor" stroke-width="2.2"/>
+    
+    <path d="M32 18v20" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/>
+    <path d="M26 32l6 6 6-6" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+  </svg>
+        </span>
+        <h3>Cost Efficiency</h3>
+        <p>The value delivered by the solution relative to the cost and resources required to implement and operate it.</p>
+      </div>
+
+      <div class="eval-card reveal d5">
+        <span class="eval-pct">15</span>
+        <span class="eval-icon" aria-hidden="true">
+          <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="24" cy="24" r="16" stroke="currentColor" stroke-width="2.2"/>
+            <circle cx="24" cy="24" r="9" stroke="currentColor" stroke-width="2.2"/>
+            <circle cx="24" cy="24" r="2.5" fill="currentColor"/>
+            <path d="M24 4v6M24 38v6M4 24h6M38 24h6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>
+          </svg>
+        </span>
+        <h3>Relevance & Alignment</h3>
+        <p>The solution addresses a meaningful need and aligns with organisational goals and broader social impact objectives.</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ===================== JURY ===================== -->
+<section class="section jury" id="jury">
+  <div class="wrap">
+    <div class="reveal" style="text-align:center">
+      <h2>AI Awards 2026 - Jury Panel</h2>
+      <p>Each finalist solution is evaluated by a panel of senior leaders with expertise spanning.</p>
+    </div>
+
+    <div class="jury-grid" id="juryGrid">
+
+      <div class="jcard reveal d1">
+        <div class="javatar"><img src="./assets/koita/chandrika-bahadur.webp" alt="Chandrika Bahadur"></div>
+        <a href="https://www.linkedin.com/in/chandrika0501/" target="_blank" class="jsoc" aria-label="Profile"><svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M4.98 3.5A2.5 2.5 0 1 1 0 3.5a2.5 2.5 0 0 1 4.98 0ZM0 8h5v16H0V8Zm7.5 0H12v2.2h.07c.63-1.2 2.17-2.46 4.46-2.46C21.28 7.74 24 10.1 24 15.03V24h-5v-8.06c0-1.92-.03-4.4-2.68-4.4-2.68 0-3.09 2.1-3.09 4.26V24h-5V8Z"></path></svg></a>
+        <h4>Chandrika Bahadur</h4>
+        <div class="jrole">Chief Executive Officer,<br/> <span>The Antara Foundation</span></div>
+      </div>
+
+      <div class="jcard reveal d1">
+        <div class="javatar"><img src="./assets/koita/geeta-goel.webp" alt="Geeta Goel"></div>
+        <a href="https://www.linkedin.com/in/geeta-goel-7586144/" target="_blank" class="jsoc" aria-label="Profile"><svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M4.98 3.5A2.5 2.5 0 1 1 0 3.5a2.5 2.5 0 0 1 4.98 0ZM0 8h5v16H0V8Zm7.5 0H12v2.2h.07c.63-1.2 2.17-2.46 4.46-2.46C21.28 7.74 24 10.1 24 15.03V24h-5v-8.06c0-1.92-.03-4.4-2.68-4.4-2.68 0-3.09 2.1-3.09 4.26V24h-5V8Z"></path></svg></a>
+        <h4>Geeta Goel</h4>
+        <div class="jrole">Co-Founder, <span>Translation Endeavors</span></div>
+        <div class="jrole">Board member, <span>Ashoka University</span></div>
+      </div>
+
+      <div class="jcard reveal d1">
+            <div class="javatar"><img src="./assets/koita/prithvijit-roy-pic.webp" alt="Prithvijit Roy"></div>
+            <a href="https://www.linkedin.com/in/prithvijitroy/" target="_blank" class="jsoc" aria-label="Profile"><svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M4.98 3.5A2.5 2.5 0 1 1 0 3.5a2.5 2.5 0 0 1 4.98 0ZM0 8h5v16H0V8Zm7.5 0H12v2.2h.07c.63-1.2 2.17-2.46 4.46-2.46C21.28 7.74 24 10.1 24 15.03V24h-5v-8.06c0-1.92-.03-4.4-2.68-4.4-2.68 0-3.09 2.1-3.09 4.26V24h-5V8Z"></path></svg></a>
+            <h4>Prithvijit Roy</h4>
+            <div class="jrole">Ex-Sr. MD, <span>Accenture</span></div>
+            <div class="jrole">Angel Investor and Growth Advisor, <span>AI startups</span></div>
+          </div>
+
+         
+
+          <div class="jcard reveal d1">
+            <div class="javatar"><img src="./assets/koita/sanjeev-prasad-pic.webp" alt="Sanjeev Prasad"></div>
+            <a href="https://www.linkedin.com/in/sanjeev-prasad-78a65827/" target="_blank" class="jsoc" aria-label="Profile"><svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M4.98 3.5A2.5 2.5 0 1 1 0 3.5a2.5 2.5 0 0 1 4.98 0ZM0 8h5v16H0V8Zm7.5 0H12v2.2h.07c.63-1.2 2.17-2.46 4.46-2.46C21.28 7.74 24 10.1 24 15.03V24h-5v-8.06c0-1.92-.03-4.4-2.68-4.4-2.68 0-3.09 2.1-3.09 4.26V24h-5V8Z"></path></svg></a>
+            <h4>Sanjeev Prasad</h4>
+            <div class="jrole">Ex Global CIO, <span>Genpact</span></div>
+            <div class="jrole">Board Member, <span>ILSS</span></div>
+            <div class="jrole">Advisor, <span>QCI</span></div>
+          </div>
+
+          <div class="jcard reveal d1">
+            <div class="javatar"><img src="./assets/koita/shaveta-sharma-kukreja-pic.webp" alt="Shaveta Sharma Kukreja"></div>
+            <a href="https://www.linkedin.com/in/shaveta-sharma-kukreja-3974887/" target="_blank" class="jsoc" aria-label="Profile"><svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M4.98 3.5A2.5 2.5 0 1 1 0 3.5a2.5 2.5 0 0 1 4.98 0ZM0 8h5v16H0V8Zm7.5 0H12v2.2h.07c.63-1.2 2.17-2.46 4.46-2.46C21.28 7.74 24 10.1 24 15.03V24h-5v-8.06c0-1.92-.03-4.4-2.68-4.4-2.68 0-3.09 2.1-3.09 4.26V24h-5V8Z"></path></svg></a>
+            <h4>Shaveta Sharma Kukreja</h4>
+            <div class="jrole">Trustee & Advisory Board, <span>Central Square Foundation</span></div>
+            <div class="jrole">Advisory Board, <span>ILSS</span></div>
+          </div>
+    
+
+    </div>
+  </div>
+</section>
+
+<!-- ===================== STATS ===================== -->
+
+<section class="section" style="background-color:#fff;" id="winners">
+  <div class="wrap">
+
+    <!-- Stats -->
+  <div class="stats">
+  <div class="stats-head"><h2>KF TECH Awards 2025</h2></div>
+  <div class="stats-inner reveal">
+    <div class="stat-row">
+      <div class="stat">
+        <div class="sic">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z"/>
+            <path d="M14 2v6h6M9 13h6M9 17h4"/>
+          </svg>
+        </div>
+        <div class="num" data-count="60" data-suffix="+">0</div>
+        <div class="lbl">Applications</div>
+      </div>
+
+      <div class="stat">
+        <div class="sic">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
+            <circle cx="9" cy="7" r="4"/>
+            <path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/>
+          </svg>
+        </div>
+        <div class="num" data-count="12">0</div>
+        <div class="lbl">Finalists</div>
+      </div>
+
+      <div class="stat">
+        <div class="sic">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="8" r="6"/>
+            <path d="M8.5 13.5 7 22l5-3 5 3-1.5-8.5"/>
+          </svg>
+        </div>
+        <div class="num" data-count="7">0</div>
+        <div class="lbl">Winners</div>
+      </div>
+
+      <div class="stat">
+        <div class="sic">
+          <svg width="22" height="22" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path fill="currentColor" d="M7 4h10v2h-4.2c1.2.7 2 1.9 2.2 3H17v2h-2c-.3 2.7-2.5 4.7-5.7 4.9L17 22h-3l-7-7v-2h2c2.3 0 3.7-.9 4-2H7V9h6c-.5-.9-1.5-1-2.9-1H7V4z"/>
+          </svg>
+        </div>
+        <div class="num" data-count="60" data-prefix="₹" data-suffix="LAKHS">0</div>
+        <div class="lbl">Total Awarded Prize Pool</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    <!-- Winners -->
+    <div class="divider reveal"><span>Winners</span></div>
+
+    <div class="winner-row first reveal">
+      <div class="rank-badge gold">1<sup>st</sup></div>
+      <div class="winner-col">
+      <div class="winner-logo"><img src="{{ asset('assets/koita/adalat-ai.webp') }}" alt="Adalat AI – AI-enabled courtroom operations "></div>
+      <div class="first_box_col">
+      <p>Adalat AI: AI-Enabled Courtroom Operations Accelerating Justice Delivery</p>
+      <a href="https://dt4si.com/digital-transformation-case-studies/legsysai-ai-powered-courtroom-workflow-automation-for-timely-justice" class="case-btn" target="_blank">Read Case Study <span class="ext">↗</span></a>
+      </div>
+      </div>
+    </div>
+
+    <div class="winner-row second reveal">
+      <div class="rank-badge silver">2<sup>nd</sup></div>
+      <div class="winner-col">
+        <div class="winner-logo small"><img src="{{ asset('assets/koita/seeds.webp') }}" alt="Sustainable Environment and Ecological Development Society (SEEDS)"></div>
+        <div class="winner-text">
+          <p>Sustainable Environment and Ecological Development Society (SEEDS)</p>
+          <a href="https://dt4si.com/digital-transformation-case-studies/seeds-ai-powered-hyperlocal-risk-mapping-for-urban-resilience" class="case-link" target="_blank">Read Case Study <span class="ext">↗</span></a>
+        </div>
+      </div>
+      <div class="winner-col">
+        <div class="winner-logo small"><img src="{{ asset('assets/koita/vopa.webp') }}" alt="Vowels of the People Association"></div>
+        <div class="winner-text">
+          <p>Vowels of the People Association</p>
+          <a href="https://dt4si.com/digital-transformation-case-studies/vopa-ai-driven-foundational-literacy-and-numeracy-assessment-at-scale" target="_blank" class="case-link">Read Case Study <span class="ext">↗</span></a>
+        </div>
+      </div>
+    </div>
+
+    <div class="winner-row third reveal">
+      <div class="rank-badge bronze">3<sup>rd</sup></div>
+      <div class="winner-col">
+        <div class="winner-logo small"><img src="{{ asset('assets/koita/farmers-for-forests.webp') }}" alt="Farmers for Forests - AI Awards 2026 finalist"></div>
+        <div class="winner-text">
+          <p>Farmers for Forests</p>
+          <a href="https://dt4si.com/digital-transformation-case-studies/farmers-for-forests-ai-enabled-digital-mrv-for-trusted-carbon-markets" target="_blank" class="case-link">Read Case Study <span class="ext">↗</span></a>
+        </div>
+      </div>
+      <div class="winner-col">
+        <div class="winner-logo small"><img src="{{ asset('assets/koita/civis.webp') }}" alt="Civis – Civic Innovation Foundation"></div>
+        <div class="winner-text">
+          <p>Civic Innovation Foundation 'Civis'</p>
+          <a href="https://dt4si.com/digital-transformation-case-studies/civis-ai-enabled-public-consultation-platform-for-policy-making" class="case-link" target="_blank">Read Case Study <span class="ext">↗</span></a>
+        </div>
+      </div>
+      <div class="winner-col">
+        <div class="winner-logo small"><img src="{{ asset('assets/koita/armman.webp') }}" alt="ARMMAN – AI Awards 2026 finalist"></div>
+        <div class="winner-text">
+          <p>ARMMAN</p>
+          <a href="https://dt4si.com/digital-transformation-case-studies/armman-ai-assisted-clinical-decision-support-for-high-risk-pregnancies" target="_blank" class="case-link">Read Case Study <span class="ext">↗</span></a>
+        </div>
+      </div>
+    </div>
+
+   <!-- Popular Choice + Finalists -->
+<div class="pc-fin-grid">
+
+  <div class="pc-block">
+    <div class="divider reveal"><span>Audience Choice</span></div>
+
+    <div class="pc-card reveal">
+      <span class="star">★</span>
+      <div class="pc-logo">
+        <img src="{{ asset('assets/koita/sneha.webp') }}" alt="SNEHA – Society for Nutrition Education and Health Action">
+      </div>
+      <p>SNEHA (Society for Nutrition Education and Health Action)</p>
+      <a href="https://dt4si.com/digital-transformation-case-studies/sneha-ai-supported-maternal-and-child-health-guidance-in-urban-settlements" target="_blank" class="case-link">Read Case study <span class="ext">↗</span></a>
+    </div>
+  </div>
+
+  <div class="fin-block">
+    <div class="divider reveal"><span>Finalists</span></div>
+
+    <div class="fin-outer reveal">
+  <div class="fin-slider" id="finSlider">
+    <div class="fin-track" id="finTrack">
+      <div class="fin-card">
+        <div class="fin-logo"><img src="{{ asset('assets/koita/rocket-learning.webp') }}" alt="Rocket Learning"></div>
+        <p>Ekho Foundation - Rocket Learning</p>
+        <a href="https://dt4si.com/digital-transformation-case-studies/rocket-learning-ai-driven-worksheet-autocorrection-for-early-learning" class="case-link" target="_blank">Read Case study <span class="ext">↗</span></a>
+      </div>
+      <div class="fin-card">
+        <div class="fin-logo"><img src="{{ asset('assets/koita/isaksham.webp') }}" alt="i-Saksham"></div>
+        <p>I-Saksham Education and Learning Foundation</p>
+        <a href="https://dt4si.com/digital-transformation-case-studies/i-saksham-ai-enabled-coaching-intelligence-for-programme-scale" class="case-link" target="_blank">Read Case study <span class="ext">↗</span></a>
+      </div>
+      
+      <div class="fin-card">
+        <div class="fin-logo"><img src="{{ asset('assets/koita/the-apprentice.webp') }}" alt="The Apprentice Project (TAP)"></div>
+        <p>The Apprentice Project (TAP)</p>
+        <a href="https://dt4si.com/digital-transformation-case-studies/the-apprentice-project-ai-enabled-skill-assessment-at-scale" class="case-link" target="_blank">Read Case study <span class="ext">↗</span></a>
+      </div>
+
+      <div class="fin-card">
+        <div class="fin-logo"><img src="{{ asset('assets/koita/udhyam-learning-foundation.webp') }}" alt="Udhyaan Learning Foundation"></div>
+        <p>Udhyam Learning Foundation</p>
+        <a href="https://dt4si.com/digital-transformation-case-studies/udhyam-learning-ai-powered-mentorship-for-student-entrepreneurship" class="case-link" target="_blank">Read Case study <span class="ext">↗</span></a>
+      </div>
+
+      <div class="fin-card">
+        <div class="fin-logo"><img src="{{ asset('assets/koita/william-j-clinton-foundation.webp') }}" alt="William J Clinton Foundation"></div>
+        <p>William J Clinton Foundation</p>
+        <a href="https://dt4si.com/digital-transformation-case-studies/clinton-foundation-ai-enabled-tb-screening-for-community-health-programmes" target="_blank" class="case-link">Read Case study <span class="ext">↗</span></a>
+      </div>
+    </div>
+  </div>
+
+  <div class="fin-dots" id="finDots"></div>
+</div>
+  </div>
+
+</div>
+
+  </div>
+  
+  <div>
+  <div class="wrap">
+      <div class="divider reveal"><span>Gallery</span></div>
+  <style>
+.gallery-grid{display:grid;grid-template-columns:2fr 1fr .75fr;grid-template-rows:220px 190px;gap:16px;max-width:1280px;margin:auto}.gallery-item{position:relative;overflow:hidden;border-radius:18px;background:#ddd}.gallery-item img{width:100%;height:100%;object-fit:cover;display:block;transition:.4s}.gallery-item:hover img{transform:scale(1.05)}.gallery-item:after{content:'';position:absolute;left:0;right:0;bottom:0;height:90px;background:linear-gradient(to top,rgba(0,0,0,.75),transparent)}.gallery-title{position:absolute;left:16px;bottom:14px;color:#fff;font-weight:700;letter-spacing:2px;z-index:2;font-size:15px}.large{grid-row:1/span 2}.winners{grid-column:2}.audience{grid-column:3}.panel{grid-column:2;grid-row:2}.stage{grid-column:3;grid-row:2}@media(max-width:991px){.gallery-grid{grid-template-columns:1fr 1fr;grid-template-rows:auto}.large{grid-column:1/span 2;height:350px}.winners,.audience,.panel,.stage{height:220px;grid-column:auto;grid-row:auto}}@media(max-width:600px){.gallery-grid{grid-template-columns:1fr}.large{grid-column:auto;height:260px}.winners,.audience,.panel,.stage{height:220px}}
+</style>
+<div class="gallery-grid">
+<div class="gallery-item large"><img src="{{ asset('assets/koita/images/award-ceremony.jpg') }}" alt="AI Awards 2026 award ceremony with attendees" title="AI Awards 2026 award ceremony with attendees"><div class="gallery-title">Award Ceremony</div></div>
+<div class="gallery-item winners"><img src="{{ asset('assets/koita/images/winners.jpg') }}" alt="Winners" title="Winners"><div class="gallery-title">Winners</div></div>
+<div class="gallery-item audience"><img src="{{ asset('assets/koita/gallery-image.webp') }}" alt="Showcase Area" title="Showcase Area"><div class="gallery-title">Showcase Area</div></div>
+<div class="gallery-item panel"><img src="{{ asset('assets/koita/images/panel.jpg') }}" alt="Panel" title="Panel"><div class="gallery-title">Panel</div></div>
+<div class="gallery-item stage"><img src="{{ asset('assets/koita/images/stage.jpg') }}" alt="Stage" title="Stage"><div class="gallery-title">Stage</div></div>
+</div>
+</div>
+  </div>
+</section>
+
+
+
+<!-- ===================== FAQ ===================== -->
+<section class="section faq" id="faq">
+  <div class="wrap">
+    <div class="reveal" style="text-align:center">
+      <span class="eyebrow" style="justify-content:center">Questions? We've got answers</span>
+      <h2>Frequently Asked Questions</h2>
+    </div>
+    <div class="faq-grid">
+      <div class="faq-list" id="faqList"></div>
+      <div class="help-card reveal d1">
+        <svg class="hbubble" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2Z"/><path d="M9.1 9a3 3 0 0 1 5.8 1c0 2-3 3-3 3M12 17h.01"/></svg>
+        <h4>Have more questions?</h4>
+        <p>We're here to help you figure out if your solution is a fit.</p>
+        <a href="mailto:aiawards@indialeadersforsocialsector.com" class="btn btn-primary">Get in touch <span class="arw">
+  <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+  </svg>
+</span></a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== REGISTER / SUBMIT ===================== -->
+<section class="section register" id="register">
+  <!-- <svg style="position:absolute;bottom:-100px;left:-100px;width:360px;opacity:.1;z-index:0" viewBox="0 0 200 200" aria-hidden="true">
+    <g stroke="#dcb22f" stroke-width="1"><line x1="100" y1="0" x2="100" y2="200"/><line x1="0" y1="100" x2="200" y2="100"/><line x1="20" y1="20" x2="180" y2="180"/><line x1="180" y1="20" x2="20" y2="180"/></g>
+  </svg> -->
+  <div class="wrap reg-shell">
+    <div class="reg-intro reveal">
+      <span class="eyebrow">Take part</span>
+      <h2>Showcase Your Innovation</h2>
+
+      <p>Getting started is simple. Register your interest today and we will send you the application link. Then submit your <strong>AI solution</strong>, measurable social impact and supporting documents before the deadline.</p>
+
+      <div class="reg-facts">
+        <div class="reg-fact"><span class="rf-ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg></span><span><b>Applications Closed</b></span></div>
+        <div class="reg-fact"><span class="rf-ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z"/><path d="M14 2v6h6"/></svg></span><span><b>A Simple Application Process</b> Share your <strong>AI solution</strong>, its impact and supporting evidence.</span></div>
+
+        <div class="reg-fact"><span class="rf-ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6M18 9h1.5a2.5 2.5 0 0 0 0-5H18M6 4h12v5a6 6 0 0 1-12 0Z"/><path d="M12 15v4M8 21h8"/></svg></span><span><b>Recognition Beyond the Prize</b> Compete for the <strong>₹50 lakhs prize pool</strong>, national recognition, and the opportunity to showcase your AI Innovation on the <a href="https://dt4si.com/" target="_blank"><strong>Digital Toolbook for Social Impact (DT4SI)</strong></a> platform and at the <strong>India Fundraising Conference (IFRC) 2027.</strong>.</span></div>
+      </div>
+    </div>
+
+    <div class="reg-card reveal d1" style="display: none;">
+      <div class="form-tabs" role="tablist">
+        <button class="form-tab" id="tabRegister" role="tab" aria-selected="true"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#d1a626" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+  <circle cx="12" cy="7" r="4"/>
+</svg> Register Your Interest</button>
+        <!-- <button class="form-tab" id="tabSubmit" role="tab" aria-selected="false">Submit application</button> -->
+      </div>
+
+      <!-- Register interest form -->
+      <form class="form-body" id="usopen" method="POST" action="{{ route('interest.store') }}" enctype="multipart/form-data" novalidate>
+        @csrf
+        <div id="err" style="color:#c0392b;font-weight:700;margin-bottom:14px;min-height:1.2em;">@if ($errors->any() && \Illuminate\Support\Arr::first($errors->keys()) !== 'email'){{ $errors->first() }}@endif</div>
+
+        <div class="fgrid">
+          <div class="field">
+            <label for="organisation_name">Organisation Name <span class="req">*</span></label>
+            <input type="text" id="organisation_name" name="organisation_name" value="{{ old('organisation_name') }}" placeholder="Your Non Profit Organisation">
+            <div class="err-msg"></div>
+          </div>
+          <div class="field">
+            <label for="website">Website / Public Profile Link <span class="req">*</span></label>
+            <input type="text" id="website" name="website" value="{{ old('website') }}" placeholder="Website / Public Profile Link">
+            <div class="err-msg"></div>
+          </div>
+          <div class="field">
+            <label for="contact_person_name">Name of Contact Person <span class="req">*</span></label>
+            <input type="text" id="contact_person_name" name="contact_person_name" value="{{ old('contact_person_name') }}" placeholder="Full name">
+            <div class="err-msg"></div>
+          </div>
+          <div class="field">
+            <label for="designation">Designation <span class="req">*</span></label>
+            <input type="text" id="designation" name="designation" value="{{ old('designation') }}" placeholder="Designation">
+            <div class="err-msg"></div>
+          </div>
+          <div class="field{{ $errors->has('email') ? ' bad' : '' }}">
+            <label for="email">Organisation Email Address <span class="req">*</span></label>
+            <input type="email" id="email" name="email" value="{{ old('email') }}" placeholder="you@yourorg.org" class="{{ $errors->has('email') ? 'err' : '' }}">
+            <div class="err-msg">@error('email'){{ $message }}@enderror</div>
+          </div>
+          <div class="field">
+            <label for="mobile">Mobile Number <span class="req">*</span></label>
+            <input type="tel" id="mobile" name="mobile" value="{{ old('mobile') }}" placeholder="">
+            <div class="err-msg"></div>
+          </div>
+        </div>
+
+        <div class="field full">
+          <label>Organisation type <span class="req">*</span></label>
+          <div class="radio-group" style="flex-wrap:wrap;">
+            <label>
+              <input type="radio" name="organisation_type" id="org_type_section_8" value="section_8_company" @checked(old('organisation_type') === 'section_8_company')>
+              Section 8 Company
+            </label>
+            <label>
+              <input type="radio" name="organisation_type" id="org_type_trust" value="trust" @checked(old('organisation_type') === 'trust')>
+              Trust / Societies
+            </label>
+            <label>
+              <input type="radio" name="organisation_type" id="org_type_pvt" value="pvt_ltd_llp" @checked(old('organisation_type') === 'pvt_ltd_llp')>
+              Pvt. Ltd / LLP
+            </label>
+          </div>
+          <div class="err-msg"></div>
+        </div>
+
+        <div id="uploadsNonprofit" style="display:none; margin-top:20px;">
+          <p class="muted" id="nonprofitDocHelp" style="margin-bottom:12px;">Section 8 Certificate and 80G Certificate are required. 12A Certificate is optional. Accepted formats: PDF or image, maximum file size: 5 MB.</p>
+          <div class="field">
+            <label for="section8Certificate">Upload <span id="section8CertificateLabel">Section 8 Certificate</span> <span class="req" id="section8CertificateReq">*</span></label>
+            <input type="file" id="section8Certificate" name="section_8_certificate" accept=".pdf,.jpg,.jpeg,.webp,.png">
+            <div class="err-msg"></div>
+          </div>
+          <div class="field" style="margin-top:15px;">
+            <label for="certificate12a">Upload 12A Certificate</label>
+            <input type="file" id="certificate12a" name="certificate_12a" accept=".pdf,.jpg,.jpeg,.webp,.png">
+            <div class="err-msg"></div>
+          </div>
+          <div class="field" style="margin-top:15px;">
+            <label for="certificate80g">Upload 80G Certificate <span class="req" id="certificate80gReq">*</span></label>
+            <input type="file" id="certificate80g" name="certificate_80g" accept=".pdf,.jpg,.jpeg,.webp,.png">
+            <div class="err-msg"></div>
+          </div>
+        </div>
+
+        <div id="uploadsPvt" style="display:none; margin-top:20px;">
+          <p class="muted" style="margin-bottom:12px;">COI, PAN, and GST documents are required. Accepted formats: PDF or image, maximum file size: 5 MB.</p>
+          <div class="field">
+            <label for="coi">Upload COI <span class="req">*</span></label>
+            <input type="file" id="coi" name="coi" accept=".pdf,.jpg,.jpeg,.webp,.png">
+            <div class="err-msg"></div>
+          </div>
+          <div class="field" style="margin-top:15px;">
+            <label for="pan">Upload PAN <span class="req">*</span></label>
+            <input type="file" id="pan" name="pan" accept=".pdf,.jpg,.jpeg,.webp,.png">
+            <div class="err-msg"></div>
+          </div>
+          <div class="field" style="margin-top:15px;">
+            <label for="gst">Upload GST <span class="req">*</span></label>
+            <input type="file" id="gst" name="gst" accept=".pdf,.jpg,.jpeg,.webp,.png">
+            <div class="err-msg"></div>
+          </div>
+        </div>
+
+        <div class="field full" style="margin-top:20px;">
+          <label class="check" style="display:flex;align-items:flex-start;gap:10px;cursor:pointer;">
+            <input type="checkbox" id="agree_terms" name="agree_terms" value="1" @checked(old('agree_terms')) style="margin-top:4px;">
+            <span>I agree to the terms and conditions <span class="req">*</span></span>
+          </label>
+          <div class="err-msg"></div>
+        </div>
+
+        @include('partials.honeypot')
+        @include('partials.recaptcha')
+
+        <button type="submit" class="btn btn-primary form-submit" id="registerbutton">Register your Interest <span class="arw">
+  <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+  </svg>
+</span></button>
+        <p id="msg" style="display:none;margin-top:12px;font-weight:600;color:var(--plum);">Please wait while your details are being submitted…</p>
+      <p style="font-size: 15px;margin-top: 25px;display: inline-block;">Note: Post Registration, application form will be sent through email as a next step</p>
+	  </form>
+
+<style>
+.radio-group {
+    display: flex;
+    gap: 20px;
+}
+
+.radio-group label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+}
+label.check {
+    margin: 5px 0 10px;
+}
+</style>
+
+      <!-- Submit application form -->
+      <!-- <div class="form-body" id="formSubmit" style="display:none">
+        <div class="fgrid">
+          <div class="field"><label>Organisation name <span class="req">*</span></label><input type="text" data-required placeholder="Your NGO / non-profit"></div>
+          <div class="field"><label>Solution title <span class="req">*</span></label><input type="text" data-required placeholder="Name of your AI solution"></div>
+          <div class="field"><label>Email <span class="req">*</span></label><input type="email" data-required data-email placeholder="you@org.org"></div>
+          <div class="field"><label>Focus area <span class="req">*</span></label>
+            <select data-required><option value="">Select</option><option>Governance &amp; Civic Tech</option><option>Justice &amp; Legal Access</option><option>Healthcare &amp; Wellbeing</option><option>Climate &amp; Environment</option><option>Education &amp; Learning</option><option>Livelihoods</option><option>Other</option></select>
+          </div>
+        </div>
+        <div class="field full"><label>Demo or website link</label><input type="url" placeholder="https://"></div>
+        <div class="field full"><label>Application (PDF or deck) <span class="req">*</span></label>
+          <label class="file-drop" id="fileDrop"><span id="fileLabel">Click to upload your PDF / deck — max 25MB</span><input type="file" accept=".pdf,.ppt,.pptx,.key" data-required hidden id="fileInput"></label>
+        </div>
+        <button class="btn btn-primary form-submit" data-form="submit">Submit application <span class="arw">&rarr;</span></button>
+        <div class="form-success" id="successSubmit">
+          <div class="fs-ic"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></div>
+          <h4>Application received</h4><p>Thank you — our editorial team will review your solution and be in touch about the next steps.</p>
+        </div>
+      </div> -->
+    </div>
+
+    <div class="audience-poll-card reveal d1">
+      <div>
+          <svg viewBox="0 0 24 24" fill="none" stroke="#d9b45c" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="20 6 9 17 4 12"></polyline>
+          </svg>
+      </div>
+
+      <span>Audience Choice Awards open on 19 November 2026</span>
+
+      <h2>Thank You for Participating!</h2>
+
+      <p>Applications for The ILSS – KCADT AI Awards 2026 are now closed.</p>
+      <p>Thank you all for the overwhelming response.</p>
+      <p style="margin-bottom: 2rem;">Stay tuned — the Audience Choice Awards opens on 19 November 2026, giving you the chance to champion your favourite AI solution.</p>
+
+      <a href="javascript:void(0);" class="btn btn-primary">Audience Choice Awards <span class="arw">
+      <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+      </svg>
+    </span></a>
+    </div> 
+
+  </div>
+</section>
+
+<!-- ===================== NEWSLETTER ===================== -->
+<!-- <section class="newsletter">
+  <div class="wrap news-inner">
+    <div class="nl-left">
+      <div class="nl-ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 5L2 7"/></svg></div>
+      <div><h4>Stay updated</h4><p>Get updates about the awards and AI for social impact.</p><div class="nl-note" id="nlNote">Thanks — you're on the list.</div></div>
+    </div>
+    <div class="nl-form"><input type="email" id="nlEmail" placeholder="Enter your email" aria-label="Email address"><button id="nlBtn" aria-label="Subscribe">&rarr;</button></div>
+  </div>
+</section> -->
+
+</main>
+@endsection
+
+@push('modals')
+<!-- ===================== REEL MODAL ===================== -->
+<div class="modal" id="reelModal" aria-hidden="true">
+  <div class="modal-backdrop" data-close></div>
+  <div class="modal-box" role="dialog" aria-modal="true" aria-label="2025 highlight reel">
+    <button class="modal-close" data-close aria-label="Close video">&times;</button>
+    <div class="modal-video" id="reelMount"></div>
+  </div>
+</div>
+@endpush
+
+@push('scripts')
+@if (filled(config('koita.recaptcha.site_key')))
+<script src="https://www.google.com/recaptcha/api.js" async defer></script>
+@endif
+<script src="{{ asset('js/home.js') }}"></script>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+<script>
+$(document).ready(function () {
+    @if ($errors->any())
+        var registerSection = document.getElementById('register');
+        if (registerSection) {
+            registerSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+    @endif
+
+    function fieldFrom(selectorOrEl) {
+        var $el = $(selectorOrEl);
+        if ($el.hasClass('field')) {
+            return $el;
+        }
+        return $el.closest('.field');
+    }
+
+    function setFieldError(selectorOrEl, message) {
+        var $field = fieldFrom(selectorOrEl);
+        if (!$field.length) {
+            $('#err').text(message);
+            return false;
+        }
+        var $msg = $field.children('.err-msg');
+        if (!$msg.length) {
+            $msg = $('<div class="err-msg"></div>').appendTo($field);
+        }
+        $msg.text(message);
+        $field.addClass('bad');
+        $field.find('input:not([type=radio]):not([type=checkbox]), select, textarea').addClass('err');
+        return false;
+    }
+
+    function clearFieldError(selectorOrEl) {
+        var $field = fieldFrom(selectorOrEl);
+        if (!$field.length) {
+            return;
+        }
+        $field.removeClass('bad');
+        $field.find('input, select, textarea').removeClass('err');
+        $field.children('.err-msg').text('');
+    }
+
+    function clearAllFieldErrors() {
+        $('#usopen .field.bad').each(function () {
+            clearFieldError(this);
+        });
+        $('#err').text('');
+    }
+
+    function toggleOrgUploads() {
+        var type = $('input[name="organisation_type"]:checked').val();
+        var isNonprofit = type === 'section_8_company' || type === 'trust';
+        var isPvt = type === 'pvt_ltd_llp';
+        var isSection8Company = type === 'section_8_company';
+        var isTrust = type === 'trust';
+        $('#uploadsNonprofit').toggle(!!isNonprofit);
+        $('#uploadsPvt').toggle(!!isPvt);
+        if (isNonprofit) {
+            $('#section8CertificateLabel').text(isTrust ? 'COI' : 'Section 8 Certificate');
+            $('#section8CertificateReq').toggle(!!isSection8Company);
+            $('#certificate80gReq').show();
+            $('#nonprofitDocHelp').text(
+                isSection8Company
+                    ? 'Section 8 Certificate and 80G Certificate are required. 12A Certificate is optional. Accepted formats: PDF or image, maximum file size: 5 MB.'
+                    : '80G Certificate is required. COI and 12A Certificate are optional. Accepted formats: PDF or image, maximum file size: 5 MB.'
+            );
+        }
+        if (!isNonprofit) {
+            $('#uploadsNonprofit input[type=file]').each(function () {
+                $(this).val('');
+                clearFieldError(this);
+            });
+        }
+        if (!isPvt) {
+            $('#uploadsPvt input[type=file]').each(function () {
+                $(this).val('');
+                clearFieldError(this);
+            });
+        }
+    }
+
+    $('input[name="organisation_type"]').on('change', toggleOrgUploads);
+    toggleOrgUploads();
+
+    $('#usopen').on('input change', 'input, select, textarea', function () {
+        clearFieldError(this);
+    });
+
+    function allowedFile(input) {
+        if (!input.files || !input.files.length) {
+            return true;
+        }
+        var name = input.files[0].name;
+        var ext = name.split('.').pop().toLowerCase();
+        if ($.inArray(ext, ['pdf', 'jpg', 'jpeg', 'webp', 'png']) === -1) {
+            return false;
+        }
+        if (input.files[0].size > 5 * 1024 * 1024) {
+            return false;
+        }
+        return true;
+    }
+
+    var fieldMax = {{ (int) \App\Models\Applicant::FIELD_MAX }};
+    var mobileMax = {{ (int) \App\Models\Applicant::MOBILE_MAX }};
+    var fileTypeMsg = 'Documents must be PDF or image (jpg, jpeg, webp, png) and under 5MB';
+
+    $('#usopen').on('submit', function (e) {
+        clearAllFieldErrors();
+
+        var ok = true;
+        var firstFocus = null;
+
+        function fail(selector, message) {
+            setFieldError(selector, message);
+            if (!firstFocus) {
+                var $target = $(selector);
+                firstFocus = $target.filter('input, select, textarea')[0]
+                    || $target.find('input, select, textarea').get(0)
+                    || null;
+            }
+            ok = false;
+        }
+
+        var organisationName = $.trim($('#organisation_name').val());
+        if (organisationName === '') {
+            fail('#organisation_name', 'Please enter organisation name');
+        } else if (organisationName.length > fieldMax) {
+            fail('#organisation_name', 'Organisation name may not be greater than ' + fieldMax + ' characters.');
+        }
+
+        var website = $.trim($('#website').val());
+        if (website === '') {
+            fail('#website', 'Please enter website / public profile link');
+        } else if (website.length > fieldMax) {
+            fail('#website', 'Website / public profile link may not be greater than ' + fieldMax + ' characters.');
+        } else {
+            var websiteToCheck = website;
+            if (!/^https?:\/\//i.test(websiteToCheck)) {
+                websiteToCheck = 'https://' + websiteToCheck;
+            }
+            try {
+                var parsedWebsite = new URL(websiteToCheck);
+                if (parsedWebsite.protocol !== 'http:' && parsedWebsite.protocol !== 'https:') {
+                    fail('#website', 'Please enter a valid website / public profile URL');
+                } else if (!parsedWebsite.hostname || parsedWebsite.hostname.indexOf('.') === -1) {
+                    fail('#website', 'Please enter a valid website / public profile URL');
+                }
+            } catch (err) {
+                fail('#website', 'Please enter a valid website / public profile URL');
+            }
+        }
+
+        var contactPersonName = $.trim($('#contact_person_name').val());
+        if (contactPersonName === '') {
+            fail('#contact_person_name', 'Please enter name of contact person');
+        } else if (contactPersonName.length > fieldMax) {
+            fail('#contact_person_name', 'Contact person name may not be greater than ' + fieldMax + ' characters.');
+        }
+
+        var designation = $.trim($('#designation').val());
+        if (designation === '') {
+            fail('#designation', 'Please enter designation');
+        } else if (designation.length > fieldMax) {
+            fail('#designation', 'Designation may not be greater than ' + fieldMax + ' characters.');
+        }
+
+        var email = $.trim($('#email').val());
+        if (email === '') {
+            fail('#email', 'Please enter your organisation email');
+        } else if (email.length > fieldMax) {
+            fail('#email', 'Email may not be greater than ' + fieldMax + ' characters.');
+        } else if (!email.match(/^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/)) {
+            fail('#email', 'Please enter a valid email');
+        } else {
+            var emailDomain = (email.split('@')[1] || '').toLowerCase();
+            var blockedEmailDomains = @json(config('koita.blocked_email_domains'));
+            if (blockedEmailDomains.indexOf(emailDomain) !== -1) {
+                fail('#email', 'Please use your organisation email or Gmail address. Other free email providers are not allowed.');
+            }
+        }
+
+        var mobile = $.trim($('#mobile').val());
+        if (mobile === '') {
+            fail('#mobile', 'Please enter your mobile number');
+        } else if (mobile.length > mobileMax) {
+            fail('#mobile', 'Mobile number may not be greater than ' + mobileMax + ' characters.');
+        } else if (!mobile.match(/^[ ()\-_+0-9]+$/)) {
+            fail('#mobile', 'Please enter a valid mobile number');
+        } else {
+            var mobileDigits = mobile.replace(/\D/g, '');
+            if (mobileDigits.length >= 12 && mobileDigits.substring(0, 2) === '91') {
+                mobileDigits = mobileDigits.substring(2);
+            }
+            if (mobileDigits.length >= 11 && mobileDigits.charAt(0) === '0') {
+                mobileDigits = mobileDigits.substring(1);
+            }
+            if (mobileDigits.length < 10) {
+                fail('#mobile', 'Please enter a valid 10-digit mobile number');
+            } else if (!/^[6-9]/.test(mobileDigits)) {
+                fail('#mobile', 'Mobile number must start with 6, 7, 8 or 9');
+            }
+        }
+
+        var orgType = $('input[name="organisation_type"]:checked').val();
+        if (!orgType) {
+            fail('#org_type_section_8', 'Please select organisation type');
+        } else if (orgType === 'section_8_company') {
+            var section8Only = $('#section8Certificate')[0];
+            if (!section8Only.files || !section8Only.files.length) {
+                fail('#section8Certificate', 'Please upload Section 8 Certificate');
+            } else if (!allowedFile(section8Only)) {
+                fail('#section8Certificate', fileTypeMsg);
+            }
+            var cert12aCompany = $('#certificate12a')[0];
+            if (cert12aCompany.files && cert12aCompany.files.length && !allowedFile(cert12aCompany)) {
+                fail('#certificate12a', fileTypeMsg);
+            }
+            var cert80gCompany = $('#certificate80g')[0];
+            if (!cert80gCompany.files || !cert80gCompany.files.length) {
+                fail('#certificate80g', 'Please upload 80G Certificate');
+            } else if (!allowedFile(cert80gCompany)) {
+                fail('#certificate80g', fileTypeMsg);
+            }
+        } else if (orgType === 'trust') {
+            var section8Trust = $('#section8Certificate')[0];
+            var cert12aTrust = $('#certificate12a')[0];
+            var cert80gTrust = $('#certificate80g')[0];
+            if (section8Trust.files && section8Trust.files.length && !allowedFile(section8Trust)) {
+                fail('#section8Certificate', fileTypeMsg);
+            }
+            if (cert12aTrust.files && cert12aTrust.files.length && !allowedFile(cert12aTrust)) {
+                fail('#certificate12a', fileTypeMsg);
+            }
+            if (!cert80gTrust.files || !cert80gTrust.files.length) {
+                fail('#certificate80g', 'Please upload 80G Certificate');
+            } else if (!allowedFile(cert80gTrust)) {
+                fail('#certificate80g', fileTypeMsg);
+            }
+        } else if (orgType === 'pvt_ltd_llp') {
+            [
+                { selector: '#coi', message: 'Please upload COI' },
+                { selector: '#pan', message: 'Please upload PAN' },
+                { selector: '#gst', message: 'Please upload GST' }
+            ].forEach(function (spec) {
+                var el = $(spec.selector)[0];
+                if (!el.files || !el.files.length) {
+                    fail(spec.selector, spec.message);
+                } else if (!allowedFile(el)) {
+                    fail(spec.selector, fileTypeMsg);
+                }
+            });
+        }
+
+        if (!$('#agree_terms').is(':checked')) {
+            fail('#agree_terms', 'Please agree to the terms and conditions');
+        }
+
+        if ($('.g-recaptcha').length && (typeof grecaptcha === 'undefined' || !grecaptcha.getResponse())) {
+            fail($('.g-recaptcha').closest('.field'), 'Please complete the reCAPTCHA');
+        }
+
+        if (!ok) {
+            e.preventDefault();
+            if (firstFocus) {
+                firstFocus.focus();
+            }
+            return false;
+        }
+
+        $('#registerbutton').prop('disabled', true).hide();
+        $('#msg').show();
+        return true;
+    });
+});
+</script>
+@endpush

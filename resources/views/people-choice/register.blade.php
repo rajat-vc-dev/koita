@@ -9,23 +9,67 @@
 @endif
 
 @section('poll_content')
+<style>
+.top-marquee {
+  display: none;
+}
+header.nav {
+  top: 0px;
+}
+.poll-panel {
+  padding: clamp(22px, 5vw, 22px);
+  margin-top: 30px;
+}
+.poll-intro {
+	font-size: 14px;
+  margin-bottom: 10px;
+}
+.poll-field input {
+  min-height: 40px;
+}
+.poll-button.poll-wide {
+  background: var(--gold);
+  color: var(--ink);
+  border: 1.5px solid var(--gold);
+  font-size: 1.2rem;
+  font-family: var(--font);
+  font-weight: 700;
+  transition: transform .3s var(--ease),box-shadow .3s var(--ease),background .3s,color .3s;
+}
+.poll-panel h1 {
+  font-size: clamp(1.50rem, 5vw, 1.45rem);
+}
+.poll-button.poll-wide:hover {
+  transform: translateY(-2px);
+}
+.poll-consent {
+  font-size: 11px;
+}
+.poll-consent input {
+  margin: -2px 0 0;
+}
+.poll-hint {
+  font-size: 14px;
+}
+.poll-error {
+  font-size: 10px;
+}
+</style>
     <main class="poll-auth">
         <div class="poll-panel">
-            <h1>Audience Poll</h1>
-            <p class="poll-intro">To participate, please enter your name and email.</p>
+            <h1>Audience Choice Awards</h1>
+            <p class="poll-intro">To participate, please enter your name and email address.</p>
 
             <form id="poll-register" method="POST" action="{{ route('people-choice.register') }}">
                 @csrf
                 <div class="poll-field">
-                    <label for="poll-name">Name</label>
                     <input id="poll-name" name="name" value="{{ old('name') }}" autocomplete="name"
-                           placeholder="Enter your full name" maxlength="255" required>
+                           placeholder="Enter Your Full Name" maxlength="255" required>
                     @error('name') <p class="poll-error" role="alert">{{ $message }}</p> @enderror
                 </div>
                 <div class="poll-field">
-                    <label for="poll-email">Email address</label>
                     <input id="poll-email" name="email" type="email" value="{{ old('email') }}" autocomplete="email"
-                           placeholder="you@example.com" maxlength="255" aria-describedby="poll-email-hint" required>
+                           placeholder="Enter Your Email Address" maxlength="255" aria-describedby="poll-email-hint" required>
                     <p id="poll-email-hint" class="poll-hint">A verification code will be sent to this email address.</p>
                     @error('email') <p class="poll-error" role="alert">{{ $message }}</p> @enderror
                 </div>
@@ -39,11 +83,10 @@
                     @error('g-recaptcha-response') <p class="poll-error" role="alert">{{ $message }}</p> @enderror
                 @endif
 
-                <p class="poll-hint">We use your name and email to verify and record your ballot.</p>
                 <input type="hidden" name="marketing_consent" value="0">
                 <label class="poll-consent">
                     <input type="checkbox" name="marketing_consent" value="1" @checked(old('marketing_consent', true))>
-                    <span>I agree to receive marketing communications, campaigns, and relevant updates from ILSS (optional).</span>
+                    <span>I agree to receive marketing communications, campaigns, and relevant updates from ILSS.</span>
                 </label>
                 @error('marketing_consent') <p class="poll-error" role="alert">{{ $message }}</p> @enderror
 

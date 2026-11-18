@@ -132,7 +132,7 @@
           "name": "Is there a cash award or funding associated?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "<p>Yes. Winners of The ILSS - KCADT AI AWARDS 2026 will receive the following cash prizes:</p><ul><li>1st Prize – ₹20 Lakhs</li><li>2nd Prize – ₹10 Lakhs</li><li>3rd Prize – ₹5 Lakhs Each (3 category winners)</li><li>People's Choice – ₹5 Lakhs</li></ul>"
+            "text": "<p>Yes. Winners of The ILSS - KCADT AI AWARDS 2026 will receive the following cash prizes:</p><ul><li>1st Prize – ₹20 Lakhs</li><li>2nd Prize – ₹10 Lakhs</li><li>3rd Prize – ₹5 Lakhs Each (3 category winners)</li><li>Audience Choice – ₹5 Lakhs</li></ul>"
           }
         },
         {

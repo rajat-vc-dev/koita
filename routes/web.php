@@ -44,7 +44,7 @@ Route::post('/documents/resubmit/{token}', [DocumentResubmitController::class, '
 
 Route::get('/thanks', ThanksController::class)->name('thanks');
 
-Route::prefix('peoples-choice-awards-demo')->name('people-choice.')
+Route::prefix('audience-choice-awards-demo')->name('people-choice.')
     ->middleware(EnsurePeopleChoiceVotingEnabled::class)
     ->group(function () {
         Route::get('/', [PeopleChoiceController::class, 'show'])->name('show');

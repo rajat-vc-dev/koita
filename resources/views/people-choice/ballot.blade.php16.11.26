@@ -1,0 +1,574 @@
+@extends('people-choice.layout')
+
+@section('title', 'People’s Choice Awards')
+
+@section('poll_content')
+<style>
+.top-marquee {
+  display: none;
+}
+header.nav {
+  top: 0px;
+  border-bottom: 1px solid #f2f2f2;
+}
+.poll-heading h1 {
+  margin-top: 40px;
+}
+.poll-tray {
+  margin-bottom: 30px;
+  border: 1px solid var(--poll-border);
+  border-radius: 100px;
+}
+#poll-submit {
+  cursor: pointer;
+}
+.poll-card-banner img {
+  width: 100%;
+  height: inherit;
+  border-radius: 0px;
+}
+
+/* =====================================================================
+   PREMIUM CARD LAYOUT — design styles (no JS changes)
+   ===================================================================== */
+.poll-shell {
+  --pc-ink:#120a1c; --pc-plum:#2a1438;
+  --pc-gold:#c9a24a; --pc-gold-hi:#f1d99a; --pc-gold-lo:#8a6a1c;
+  --pc-ivory:#fffdf8; --pc-text:#221a2b; --pc-muted:#756c7f; --pc-hair:#ece5dc;
+  --pc-gold-grad:linear-gradient(135deg,#f3dc9a 0%,#c9a24a 45%,#8a6a1c 100%);
+  background:#fff;
+}
+.poll-shell *, .poll-shell *::before, .poll-shell *::after { box-sizing:border-box; }
+
+/* heading */
+.poll-shell .poll-heading { text-align:center; margin-bottom:44px; }
+.poll-shell .poll-heading h1 { font-size:clamp(34px,5vw,56px); line-height:1.1; letter-spacing:-1px; color:var(--pc-ink); }
+.poll-shell .poll-heading p { max-width:640px; margin:14px auto 0; font-size:15px; line-height:1.7; color:var(--pc-muted); }
+
+/* grid: 4 in a row */
+.poll-shell .poll-grid {
+	display: grid;
+  grid-template-columns: repeat(3,minmax(0,1fr));
+  gap: 26px;
+}
+@media (max-width:1150px){ .poll-shell .poll-grid { grid-template-columns:repeat(3,minmax(0,1fr)); } }
+@media (max-width:860px){ .poll-shell .poll-grid { grid-template-columns:repeat(2,minmax(0,1fr)); } }
+@media (max-width:560px){ .poll-shell .poll-grid { grid-template-columns:1fr; } }
+
+/* card */
+.poll-shell .poll-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  overflow: visible;
+  background: #fff;
+  border: 1.5px solid #f0ebe3;
+  border-radius: 22px;
+  box-shadow: 0 2px 6px rgba(18,10,28,.04), 0 18px 40px -14px rgba(18,10,28,.22);
+  transition: transform .35s cubic-bezier(.2,.8,.2,1), box-shadow .35s, opacity .3s;
+}
+.poll-shell .poll-card:hover { transform:translateY(-6px); box-shadow:0 4px 10px rgba(18,10,28,.05), 0 30px 56px -18px rgba(18,10,28,.32); }
+
+/* logo area — white, logo contained, no background colour */
+.poll-shell .poll-card-banner {
+  position: relative;
+  height: 150px;
+  margin: 0px 0px 0;
+  padding: 24px 30px;
+  background: #fff;
+  box-shadow: inset 0 0 0 1px var(--pc-hair);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: visible;
+  transition: background .3s;
+  border-radius: 20px 20px 0px 0px;
+}
+.poll-shell .poll-card-banner img {
+  width:auto; height:auto; max-width:180px; max-height:82px; object-fit:contain; border-radius:0;
+  transition:transform .4s;
+}
+.poll-shell .poll-card:hover .poll-card-banner img { transform:scale(1.04); }
+.poll-shell .poll-card-banner > span:not(.poll-card-rank) {
+  width:76px; height:76px; border-radius:50%; display:flex; align-items:center; justify-content:center;
+  font-size:26px; font-weight:600; color:var(--pc-plum); text-transform:uppercase;
+  background:#faf5ea; box-shadow:inset 0 0 0 1px #ead9b0;
+}
+
+/* rank medal (your JS fills + un-hides it) */
+.poll-shell .poll-card-rank {
+  position: absolute;
+  top: 4px;
+  left: 5px;
+  z-index: 3;
+  min-width: 54px;
+  height: 35px;
+  padding: 0 10px;
+  border-radius: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 800;
+  box-shadow: 0 10px 24px -6px rgba(138,106,28,.7), inset 0 1px 0 rgba(255,255,255,.6);
+  animation: pc-pop .45s cubic-bezier(.3,1.6,.5,1);
+  background: var(--gold);
+  color: var(--ink);
+  width: 50px;
+}
+.poll-shell .poll-card-rank[hidden] { display:none; }
+@keyframes pc-pop { from { transform:scale(0) rotate(-30deg); } }
+
+/* body — visual order: name, AI solution, sector, tagline, buttons */
+.poll-shell .poll-card-body { flex:1; display:flex; flex-direction:column; padding:20px 22px 22px; }
+.poll-shell .poll-card-body > h2 {
+  order: 1;
+  margin: 0 0 16px;
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1.25;
+  letter-spacing: -.2px;
+  color: var(--pc-ink);
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--pc-hair);
+}
+.poll-shell .poll-solution,
+.poll-shell .poll-sector {
+  margin: 0;
+  padding: 0 0 11px;
+  margin-bottom: 11px;
+  border-bottom: 1px solid var(--pc-hair);
+  display: initial;
+  grid-template-columns: 86px 1fr;
+  gap: 10px;
+  align-items: start;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.4;
+  color: var(--pc-text);
+  text-transform: none;
+  letter-spacing: 0;
+}
+.poll-shell .poll-solution { order:2; }
+.poll-shell .poll-sector   { order:3; }
+.poll-shell .poll-solution > span,
+.poll-shell .poll-sector::before {
+  padding-top:3px; font-size:10px; font-weight:800; letter-spacing:1.6px; color:var(--pc-gold-lo);
+}
+.poll-shell .poll-sector::before { content:"Sector"; }
+
+/* tagline (no heading) */
+.poll-shell .poll-summary {
+  order:4; margin:auto 0 0; padding:14px 0 4px;
+  font-style:italic; font-size:14.5px; line-height:1.55; color:#5a5163;
+}
+.poll-shell .poll-summary::before {
+  content:"\201C"; font-size:34px; line-height:0; vertical-align:-12px; margin-right:3px; color:var(--pc-gold); font-style:normal;
+}
+
+/* buttons */
+.poll-shell .poll-actions { order:5; display:flex; align-items:center; justify-content:space-between; gap:12px; margin-top:18px; }
+.poll-shell .poll-actions > .poll-secondary {
+  white-space:nowrap; cursor:pointer; font-size:13px; font-weight:700; color:var(--pc-plum);
+  background:none; border:0; box-shadow:none; padding:8px 0; min-width:0;
+}
+.poll-shell .poll-actions > .poll-secondary::after {content:" →"; display:inline-block; transition:transform .2s; margin-left: 10px;}
+.poll-shell .poll-actions > .poll-secondary:hover::after { transform:translateX(4px); }
+.poll-shell .poll-actions > .poll-secondary[hidden] { display:none; }
+
+.poll-shell .poll-choice { position:relative; margin-left:auto; cursor:pointer; }
+.poll-shell .poll-choice input { position:absolute; opacity:0; width:1px; height:1px; pointer-events:none; }
+.poll-shell .poll-choice .poll-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-width: 108px;
+  white-space: nowrap;
+  padding: 12px 18px;
+  border: 0;
+  border-radius: 40px;
+  font-size: 13.5px;
+  font-weight: 700;
+  letter-spacing: .3px;
+  transition: background .25s, box-shadow .25s, filter .25s;
+  background: var(--gold);
+  color: var(--ink);
+  transition: transform .3s var(--ease),box-shadow .3s var(--ease),background .3s,color .3s;
+}
+.poll-shell .poll-choice:hover .poll-button {
+	transform: translateY(-2px);
+}
+.poll-shell .poll-choice input:focus-visible + .poll-button { outline:2px solid var(--pc-gold); outline-offset:3px; }
+.poll-shell .poll-choice input:disabled + .poll-button { background:#eee9f1; color:#a49bae; box-shadow:none; cursor:not-allowed; }
+
+/* selected card */
+.poll-shell .poll-card:has(input:checked) {
+  border-color:transparent;
+  background:linear-gradient(var(--pc-ivory),var(--pc-ivory)) padding-box, var(--pc-gold-grad) border-box;
+  box-shadow:0 0 0 4px rgba(201,162,74,.18), 0 26px 50px -18px rgba(138,106,28,.45);
+}
+.poll-shell .poll-card:has(input:checked) .poll-card-banner {
+	background: linear-gradient(180deg,#fffaf0,#fff);
+  border-radius: 20px 20px 0px 0px;
+}
+.poll-shell .poll-choice input:checked + .poll-button,
+.poll-shell .poll-choice:hover input:checked + .poll-button {
+	background: var(--gold);
+  color: var(--ink);
+}
+.poll-shell .poll-card:has(input:disabled:not(:checked)) { opacity:.45; }
+.poll-shell .poll-card:has(input:disabled:not(:checked)):hover { opacity:.85; }
+
+/* bottom tray */
+.poll-shell .poll-tray {
+  position: sticky;
+  bottom: 20px;
+  z-index: 50;
+  margin-top: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 22px;
+  padding: 18px 20px 18px 28px;
+  border-radius: 24px;
+  color: #fff;
+  backdrop-filter: blur(18px) saturate(1.4);
+  -webkit-backdrop-filter: blur(18px) saturate(1.4);
+  border: 1px solid rgba(201,162,74,.35);
+  box-shadow: 0 30px 70px -10px rgba(18,10,28,.45);
+  background: var(--deep-plum);
+}
+.poll-shell .poll-tray > div { flex:1; min-width:0; }
+.poll-shell #poll-count { margin:0; font-size:15px; font-weight:800; color:#fff; }
+.poll-shell .poll-tray-hint { margin:6px 0 0; font-size:12px; color:#b5a9c0; }
+.poll-shell .poll-ranked-choices { list-style:none; display:flex; flex-wrap:wrap; gap:8px; margin:12px 0 2px; padding:0; }
+.poll-shell .poll-ranked-choices[hidden] { display:none; }
+.poll-shell .poll-ranked-choices li {
+  display:inline-flex; align-items:center; gap:6px; padding:6px 8px 6px 6px; border-radius:30px;
+  background:linear-gradient(135deg,rgba(201,162,74,.22),rgba(255,255,255,.04));
+  border:1px solid rgba(201,162,74,.5); color:#fff; font-size:12.5px; font-weight:700;
+}
+.poll-shell .poll-ranked-choices li > :first-child:not(button) {
+  min-width: 24px;
+  height: 24px;
+  padding: 0 6px;
+  border-radius: 30px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11.5px;
+  font-weight: 800;
+  background: var(--gold);
+  color: var(--ink);
+}
+.poll-shell .poll-ranked-choices li button {
+  width: 22px;
+  height: 22px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: #fff;
+  font-size: 25px;
+  line-height: 1;
+  cursor: pointer;
+}
+.poll-shell .poll-ranked-choices li button:hover:not(:disabled) { background:rgba(255,255,255,.15); }
+.poll-shell .poll-ranked-choices li button:disabled { opacity:.25; cursor:default; }
+.poll-shell #poll-submit {
+  flex-shrink: 0;
+  padding: 17px 30px;
+  border: 0;
+  border-radius: 16px;
+  white-space: nowrap;
+  font-size: 14px;
+  font-weight: 800;
+  letter-spacing: .4px;
+  box-shadow: 0 10px 30px -8px rgba(201,162,74,.6);
+  transition: transform .25s, box-shadow .25s;
+  background: var(--gold);
+  color: var(--ink);
+}
+.poll-shell #poll-submit:hover:not(:disabled) { transform:translateY(-2px); box-shadow:0 16px 34px -8px rgba(201,162,74,.8); }
+.poll-shell #poll-submit:disabled {background:rgba(255,255,255,.08); color:#7f7489; box-shadow:none; cursor:not-allowed;}
+.poll-button {
+  display: inherit;
+}
+.poll-shell .poll-solution span {
+  width: 100%;
+  display: inherit;
+  margin-bottom: 5px;
+}
+@media (max-width:700px){
+  .poll-shell .poll-tray { flex-direction:column; align-items:stretch; padding:16px; }
+  .poll-shell #poll-submit { width:100%; }
+}
+
+/* error */
+.poll-shell .poll-error { max-width:640px; margin:0 auto 26px; padding:12px 18px; border-radius:12px; text-align:center;
+  background:#fdf0ee; border:1px solid #f3c9c2; color:#9c3a2e; font-weight:600; font-size:14px; }
+
+/* =====================================================================
+   READ MORE PROFILE POPUP
+   ===================================================================== */
+.poll-profile {
+  --pp-ink: #120a1c;
+  --pp-plum: #2a1438;
+  --pp-gold: #c9a24a;
+  --pp-gold-lo: #8a6a1c;
+  --pp-hair: #ece5dc;
+  --pp-text: #3f3848;
+  --pp-gold-grad: linear-gradient(135deg,#f3dc9a 0%,#c9a24a 45%,#8a6a1c 100%);
+  width: min(760px, calc(100% - 32px));
+  max-height: 86vh;
+  margin: auto;
+  padding: 0 40px 36px;
+  border: 0;
+  border-radius: 26px;
+  background: #fff;
+  color: var(--pp-text);
+  box-shadow: 0 40px 100px rgba(18,10,28,.45);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  scrollbar-color: #d9c48f transparent;
+}
+.poll-profile * { box-sizing:border-box; }
+.poll-profile::-webkit-scrollbar { width:8px; }
+.poll-profile::-webkit-scrollbar-track { background:transparent; margin:22px 0; }
+.poll-profile::-webkit-scrollbar-thumb { background:#e3d3a8; border-radius:20px; border:2px solid #fffdf8; }
+.poll-profile::-webkit-scrollbar-thumb:hover { background:#c9a24a; }
+.poll-profile[open] { animation:pp-in .35s cubic-bezier(.2,.9,.3,1.2); }
+.poll-profile::backdrop { background:rgba(18,10,28,.6); backdrop-filter:blur(6px); -webkit-backdrop-filter:blur(6px); }
+@keyframes pp-in { from { opacity:0; transform:translateY(16px) scale(.97); } }
+
+/* close button — stays visible while scrolling */
+.poll-profile-close {
+  position:sticky; top:0; z-index:5; height:0; margin:0 -22px 0 0; display:flex; justify-content:flex-end;
+}
+.poll-profile-close button {
+  margin-top:18px; width:42px; height:42px; border-radius:50%; cursor:pointer;
+  display:flex; align-items:center; justify-content:center;
+  border:1px solid var(--pp-hair); background:rgba(255,255,255,.95); color:var(--pp-ink);
+  font-size:24px; line-height:1; padding:0 0 3px;
+  box-shadow:0 6px 18px -6px rgba(18,10,28,.35); transition:transform .25s, background .25s, color .25s;
+}
+.poll-profile-close button:focus { outline:none; }
+.poll-profile-close button:focus-visible { outline:2px solid var(--pp-gold); outline-offset:3px; }
+.poll-profile-close button:hover { background:var(--pp-ink); color:#fff; transform:rotate(90deg); }
+
+/* header: logo + title + meta */
+.poll-profile-logo {
+  float:left; width:140px; height:140px; margin:40px 26px 18px 0; padding:16px; border-radius:20px;
+  background:#fff; box-shadow:inset 0 0 0 1px var(--pp-hair), 0 12px 28px -14px rgba(18,10,28,.3);
+  display:flex; align-items:center; justify-content:center;
+}
+.poll-profile-logo img { max-width:100%; max-height:100%; width:auto; height:auto; object-fit:contain; border-radius:0; }
+.poll-profile-logo span {
+  width:80px; height:80px; border-radius:50%; display:flex; align-items:center; justify-content:center;
+  font-size:28px; font-weight:700; color:var(--pp-plum); text-transform:uppercase;
+  background:#faf5ea; box-shadow:inset 0 0 0 1px #ead9b0;
+}
+.poll-profile > h2 {
+  overflow:hidden; margin:44px 0 12px; padding-right:40px;
+  font-size:26px; font-weight:700; line-height:1.2; letter-spacing:-.3px; color:var(--pp-ink);
+}
+.poll-profile > p:not(.poll-profile-text) {
+  overflow:hidden; margin:0; padding:8px 0; border-bottom:1px solid var(--pp-hair);
+  font-size:14.5px; font-weight:700; color:var(--pp-ink); line-height:1.45;
+}
+.poll-profile > p:not(.poll-profile-text) strong {
+  display: inline-block;
+  min-width: 104px;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 1.6px;
+  color: var(--pp-gold-lo);
+  vertical-align: 1px;
+}
+.poll-profile > p.poll-hint {
+  border:0; padding-top:12px; font-weight:400; font-style:italic; font-size:15.5px; color:#5a5163;
+}
+.poll-profile > p.poll-hint::before {
+  content:"\201C"; font-size:34px; line-height:0; vertical-align:-12px; margin-right:3px; color:var(--pp-gold); font-style:normal;
+}
+
+/* Problem / Solution / Impact */
+.poll-profile > h3 {
+  clear: both;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 26px 0 10px;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 2px;
+  color: var(--pp-gold-lo);
+}
+.poll-profile { counter-reset:pp-sec; }
+.poll-profile > h3 { counter-increment:pp-sec; }
+.poll-profile > h3::before {
+  content: counter(pp-sec, decimal-leading-zero);
+  width: 28px;
+  height: 28px;
+  flex-shrink: 0;
+  border-radius: 9px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0;
+  box-shadow: 0 6px 14px -6px rgba(138,106,28,.7);
+  background: var(--gold);
+  color: var(--ink);
+}
+.poll-profile > h3::after { content:""; flex:1; height:1px; background:var(--pp-hair); }
+.poll-profile > p.poll-profile-text {
+  margin:0; padding:0 0 0 40px; font-size:14.5px; line-height:1.75; color:var(--pp-text); white-space:pre-line;
+}
+
+/* links */
+.poll-profile-links {
+  clear:both; display:flex; flex-wrap:wrap; gap:12px; margin-top:30px; padding-top:24px; border-top:1px solid var(--pp-hair);
+}
+.poll-profile-links:empty { display:none; }
+.poll-profile-links a {
+  display:inline-flex; align-items:center; gap:8px; padding:12px 20px; border-radius:40px;
+  font-size:13.5px; font-weight:700; text-decoration:none; color:var(--pp-ink);
+  background:#fff; border:1px solid #e3d8ea; transition:background .2s, border-color .2s, transform .2s, box-shadow .2s;
+}
+.poll-profile-links a::after { content:"↗"; font-size:14px; transition:transform .2s; }
+.poll-profile-links a:hover { border-color:var(--pp-gold); background:#fbf5e6; transform:translateY(-2px); box-shadow:0 10px 20px -12px rgba(138,106,28,.6); }
+.poll-profile-links a:hover::after { transform:translate(2px,-2px); }
+.poll-profile-links a:first-child { background:var(--pp-ink); color:#fff; border-color:var(--pp-ink); }
+.poll-profile-links a:first-child:hover { background:var(--pp-plum); }
+.poll-profile-links a[href$=".pdf" i]::after { content:"PDF"; font-size:9.5px; font-weight:800; letter-spacing:1px; padding:3px 6px; border-radius:5px; background:#c0493d; color:#fff; }
+
+@media (max-width:640px){
+  .poll-profile { padding:0 22px 26px; }
+  .poll-profile-close { margin-right:-8px; }
+  .poll-profile-logo { float:none; margin:28px 0 14px; width:110px; height:110px; }
+  .poll-profile > h2 { margin-top:0; font-size:22px; }
+  .poll-profile > p.poll-profile-text { padding-left:0; }
+}
+</style>
+    <main class="poll-shell">
+        <div class="poll-heading">
+            <h1>Audience Choice Awards</h1>
+            @if ($entries->count() >= $minVotes)
+                <p>Below is a list of AI solutions developed by various NGOs. Please select a minimum of {{ $minVotes }} and a maximum of {{ $maxVotes }} profiles in order of preference to cast your vote.</p>
+            @else
+                <p>Voting will be available once at least {{ $minVotes }} organizations are on the ballot.</p>
+            @endif
+        </div>
+
+        @if ($errors->any())
+            <div class="poll-error poll-notice" role="alert">{{ $errors->first() }}</div>
+        @endif
+
+        <form method="POST" action="{{ route('people-choice.vote') }}" id="poll-ballot"
+              data-min="{{ $minVotes }}" data-max="{{ $maxVotes }}">
+            @csrf
+			<div class="wrap">
+            <div class="poll-grid">
+                @php
+                    $previousChoices = array_filter((array) old('choices', []), 'is_scalar');
+                    $previousChoices = array_map('strval', array_values($previousChoices));
+                @endphp
+                @foreach ($entries as $entry)
+                    @php
+                        $rank = array_search((string) $entry->id, $previousChoices, true);
+                        $summary = $entry->tagline ?: ($entry->solution ?: $entry->problem);
+                        $initials = collect(preg_split('/\s+/u', trim($entry->title)))->take(2)
+                            ->map(fn ($word) => mb_substr($word, 0, 1))->implode('');
+                    @endphp
+                    <article class="poll-card">
+                        <div class="poll-card-banner">
+                            <span class="poll-card-rank" aria-hidden="true" hidden></span>
+                            @if ($entry->logo_path)
+                                <img src="{{ route('people-choice.logo', $entry->id) }}" alt="" loading="lazy">
+                            @else
+                                <span aria-hidden="true">{{ $initials }}</span>
+                            @endif
+                        </div>
+                        <div class="poll-card-body">
+                            @if ($entry->sector)
+                                <p class="poll-sector">{{ $entry->sector }}</p>
+                            @endif
+                            <h2>{{ $entry->title }}</h2>
+                            @if ($entry->solution_name)
+                                <p class="poll-solution"><span>AI Solution</span>{{ $entry->solution_name }}</p>
+                            @endif
+                            @if ($summary)
+                                <p class="poll-summary">{{ Str::limit($summary, 140) }}</p>
+                            @endif
+
+                            <div class="poll-actions">
+                                <button type="button" class="poll-button poll-secondary" data-dialog="profile-{{ $entry->id }}" hidden>Read More</button>
+                                <label class="poll-choice">
+                                    <input type="checkbox" name="choices[]" value="{{ $entry->id }}" @checked($rank !== false)
+                                           data-rank="{{ $rank === false ? '' : $rank + 1 }}" data-title="{{ $entry->title }}" aria-label="Vote for {{ $entry->title }}">
+                                    <span class="poll-button">Vote</span>
+                                </label>
+                            </div>
+                        </div>
+                    </article>
+                @endforeach
+            </div>
+			</div>
+
+            @if ($entries->count() >= $minVotes)
+				<div class="wrap">
+                <footer class="poll-tray">
+                    <div>
+                        <p id="poll-count" aria-live="polite">Choose {{ $minVotes }} to {{ $maxVotes }} organizations.</p>
+                        <ol class="poll-ranked-choices" id="poll-ranked-choices" aria-label="Your ranked choices" hidden></ol>
+                        <p class="poll-tray-hint">Your first selection is your first choice.</p>
+                    </div>
+                    <button class="poll-button" id="poll-submit" type="submit">Submit Votes</button>
+                </footer>
+				</div>
+            @endif
+        </form>
+
+        @foreach ($entries as $entry)
+            <dialog class="poll-profile" id="profile-{{ $entry->id }}" aria-labelledby="profile-title-{{ $entry->id }}">
+                <form method="dialog" class="poll-profile-close">
+                    <button type="submit" aria-label="Close profile">×</button>
+                </form>
+                <div class="poll-profile-logo">
+                    @if ($entry->logo_path)
+                        <img src="{{ route('people-choice.logo', $entry->id) }}" alt="{{ $entry->title }} logo" loading="lazy">
+                    @else
+                        <span aria-hidden="true">{{ collect(preg_split('/\s+/u', trim($entry->title)))->take(2)->map(fn ($word) => mb_substr($word, 0, 1))->implode('') }}</span>
+                    @endif
+                </div>
+                <h2 id="profile-title-{{ $entry->id }}">{{ $entry->title }}</h2>
+                @if ($entry->solution_name)
+                    <p><strong>AI solution</strong> {{ $entry->solution_name }}</p>
+                @endif
+                @if ($entry->sector)
+                    <p><strong>Sector</strong> {{ $entry->sector }}</p>
+                @endif
+                @if ($entry->tagline)
+                    <p class="poll-hint">{{ $entry->tagline }}</p>
+                @endif
+                @foreach (['problem' => 'Problem', 'solution' => 'Solution', 'impact' => 'Impact'] as $field => $label)
+                    @if ($entry->{$field})
+                        <h3>{{ $label }}</h3>
+                        <p class="poll-profile-text">{{ $entry->{$field} }}</p>
+                    @endif
+                @endforeach
+                <div class="poll-profile-links">
+                    @foreach (['demo_url' => 'Solution Demo', 'testimonial_url' => 'User Testimonial', 'pdf_url' => 'View PDF', 'cta_url' => $entry->cta_label] as $field => $label)
+                        @if ($label && preg_match('~^https?://~i', $entry->{$field} ?? ''))
+                            <a href="{{ $entry->{$field} }}" target="_blank" rel="noopener noreferrer">{{ $label }}</a>
+                        @endif
+                    @endforeach
+                </div>
+            </dialog>
+        @endforeach
+    </main>
+@endsection

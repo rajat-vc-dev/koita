@@ -26,7 +26,7 @@
                         <li class="{{ request()->routeIs('admin.shortlist.*') ? 'active' : '' }}">
                             <a href="{{ route('admin.shortlist.index') }}">
                                 <i class="ti-list"></i>
-                                <span>Shortlist</span>
+                                <span>Shortlist Organisations</span>
                             </a>
                         </li>
                         <li class="{{ request()->routeIs('admin.scoreboard') ? 'active' : '' }}">
