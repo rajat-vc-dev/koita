@@ -27,7 +27,7 @@
                     @endif
                 @endforeach
                 <div class="poll-profile-links">
-                    @foreach (['demo_url' => 'Solution Demo', 'testimonial_url' => 'User Testimonial', 'pdf_url' => 'View PDF', 'cta_url' => $entry->cta_label] as $field => $label)
+                    @foreach (['demo_url' => 'Solution Demo', 'testimonial_url' => 'User Testimonial', 'pdf_url' => 'Learn More', 'cta_url' => $entry->cta_label] as $field => $label)
                         @if ($label && preg_match('~^https?://~i', $entry->{$field} ?? ''))
                             <a href="{{ $entry->{$field} }}" target="_blank" rel="noopener noreferrer">{{ $label }}</a>
                         @endif

@@ -186,14 +186,75 @@
 
 @isset($shortlistEntries)
 @include('people-choice.card-styles')
+
+<style>
+.poll-shell {
+  width: auto;
+}
+.poll-page .wrap {
+  padding: 0px 0px;
+}
+.poll-shell p {
+  text-align: center;
+}
+.cats-head {
+  margin-bottom: 15px;
+}
+.poll-shell .poll-grid {
+  margin-top: 30px;
+}
+.poll-shell .poll-card .poll-solution {
+  margin-top: 15px;
+}
+.poll-actions .poll-button {
+  background: var(--gold);
+  color: var(--ink);
+  border: 1.5px solid var(--gold);
+}
+.poll-shell {
+  padding-bottom: 0px;
+}
+.categories-sec {
+  padding-top: 0px;
+}
+.poll-button {
+  display: initial;
+}
+.poll-button.poll-secondary {
+  display: inherit;
+}
+[id="2026-finalists"] {
+scroll-margin-top: 100px;
+}
+.poll-profile > p.poll-profile-text {
+  text-align: left;
+}
+.cats-head h2 {
+  text-align: center;
+}
+.poll-hint {
+  text-align: left !important;
+}
+.poll-profile > p:not(.poll-profile-text):not(.poll-hint) {
+  text-align: left;
+}
+@media (max-width:1250px){
+.poll-page .wrap {
+  padding: 0px 20px;
+}
+}
+</style>
 <section class="section poll-page" id="shortlisted-organizations">
+  <div class="wrap">
     <main class="poll-shell">
-        <h2>Shortlisted Organizations</h2>
+      <div class="cats-head">  <h2 id="2026-finalists">Meet The 12 Finalists</h2></div>
+	  <p>Twelve ways AI is changing lives. Read their stories, then vote for the ones that inspire you most.</p>
         <div class="poll-grid">
             @include('people-choice.cards', ['entries' => $shortlistEntries, 'previousChoices' => [], 'preview' => true])
         </div>
         @include('people-choice.profiles', ['entries' => $shortlistEntries, 'preview' => true])
     </main>
+	</div>
 </section>
 @endisset
 
