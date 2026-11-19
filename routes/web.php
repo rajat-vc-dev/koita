@@ -47,7 +47,7 @@ Route::post('/documents/resubmit/{token}', [DocumentResubmitController::class, '
 
 Route::get('/thanks', ThanksController::class)->name('thanks');
 
-Route::prefix('audience-choice-awards-demo')->name('people-choice.')
+Route::prefix('peoples-choice-awards')->name('people-choice.')
     ->middleware(EnsurePeopleChoiceVotingEnabled::class)
     ->group(function () {
         Route::get('/', [PeopleChoiceController::class, 'show'])->name('show');
@@ -57,3 +57,6 @@ Route::prefix('audience-choice-awards-demo')->name('people-choice.')
         Route::post('/vote', [PeopleChoiceController::class, 'vote'])->middleware('throttle:10,1,people-choice-vote')->name('vote');
         Route::get('/logos/{entry}', [PeopleChoiceController::class, 'logo'])->whereNumber('entry')->name('logo');
     });
+
+Route::redirect('/peoples-choice-awards-demo', '/peoples-choice-awards', 301);
+Route::redirect('/audience-choice-awards-demo', '/peoples-choice-awards', 301);

@@ -182,9 +182,10 @@ class PeopleChoiceVotingTest extends TestCase
             'verified_at' => now(),
         ]);
 
-        $this->get('/peoples-choice-awards/')->assertNotFound();
+        $this->get('/peoples-choice-awards-demo')->assertRedirect('/peoples-choice-awards');
+        $this->get('/audience-choice-awards-demo')->assertRedirect('/peoples-choice-awards');
         $this->withSession(['people_choice.voter_id' => $voter->id])
-            ->get('/audience-choice-awards-demo/')
+            ->get('/peoples-choice-awards/')
             ->assertOk()
             ->assertSee('id="navlinks"', false)
             ->assertSee(rtrim(route('home'), '/').'/#categories', false)
