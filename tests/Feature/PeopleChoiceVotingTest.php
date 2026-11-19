@@ -250,17 +250,17 @@ class PeopleChoiceVotingTest extends TestCase
         $this->assertSame([1 => 0, 2 => 2, 3 => 0, 4 => 0, 5 => 0], $results[2]['counts']);
     }
 
-    public function test_home_demo_shows_public_shortlist_before_awards(): void
+    public function test_home_shows_public_shortlist_before_awards(): void
     {
         $entry = $this->entry('Demo shortlist organization');
         $disabled = $this->entry('Hidden organization', enabled: false);
 
-        $this->get('/home-demo')->assertOk()
-            ->assertSeeInOrder(['Shortlisted Organizations', $entry->title, 'Awards &amp; Recognition'], false)
+        $this->get('/')->assertOk()
+            ->assertSeeInOrder(['Meet The 12 Finalists', $entry->title, 'Awards &amp; Recognition'], false)
             ->assertSee(route('people-choice.show'), false)
             ->assertSee('profile-'.$entry->id, false)
             ->assertDontSee($disabled->title);
-        $this->get('/')->assertOk()->assertDontSee($entry->title);
+        $this->get('/home-demo')->assertRedirect('/');
     }
 
     private function entry(string $title, bool $enabled = true, string $status = Applicant::STATUS_SUBMITTED): ShortlistEntry
